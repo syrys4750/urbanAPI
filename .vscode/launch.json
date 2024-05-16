@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MobilitySqlRepositoryApplication<MOBILITY_SQL_REPOSITORY>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uv.sersomon.MobilitySqlRepositoryApplication",
+            "projectName": "MOBILITY_SQL_REPOSITORY",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MobilityNosqlRepositoryApplication<MOBILITY_NOSQL_REPOSITORY>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uv.sersomon.MobilityNosqlRepositoryApplication",
+            "projectName": "MOBILITY_NOSQL_REPOSITORY",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

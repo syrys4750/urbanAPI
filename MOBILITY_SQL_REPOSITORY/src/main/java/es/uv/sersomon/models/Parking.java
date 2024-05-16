@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// TODO: tabla parkings en plural
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

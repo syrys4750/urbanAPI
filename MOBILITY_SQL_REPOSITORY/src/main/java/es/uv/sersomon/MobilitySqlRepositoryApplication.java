@@ -20,6 +20,7 @@ public class MobilitySqlRepositoryApplication implements CommandLineRunner {
 
 	// TODO: cargar la información a partir de un fichero? formato del fichero?
 	// TODO: como garantizo que no voy a sobreescribir informacion?
+	// TODO: Tengo que poner un id al objeto?
 	@Override
 	public void run(String... args) throws Exception {
 		// Crear y guardar objetos Parking
@@ -27,6 +28,7 @@ public class MobilitySqlRepositoryApplication implements CommandLineRunner {
 				.createParking(new Parking(1, "1500 Amphitheatre Parkway, Mountain View, CA", 25, 37.4220, -122.0841));
 		parkingService.createParking(new Parking(2, "One Apple Park Way, Cupertino, CA", 50, 37.3349, -122.0090));
 		parkingService.createParking(new Parking(3, "Empire State Building, New York, NY", 75, 40.7488, -73.9854));
+
 	}
 
 }
