@@ -29,6 +29,16 @@
             "projectName": "POLLUTION_SQL_REPOSITORY",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PollutionNosqlRepositoryApplication<POLLUTION_NOSQL_REPOSITORY>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uv.sersomon.PollutionNosqlRepositoryApplication",
+            "projectName": "POLLUTION_NOSQL_REPOSITORY",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
