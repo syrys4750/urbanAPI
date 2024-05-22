@@ -21,6 +21,7 @@ import org.yaml.snakeyaml.events.Event;
 import es.uv.sersomon.models.Parking;
 import es.uv.sersomon.services.ParkingService;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1")

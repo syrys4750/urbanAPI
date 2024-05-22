@@ -49,10 +49,6 @@ public class EventController {
             @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
 
-        LocalDateTime defaultFrom = Instant.parse("1970-01-19T23:00:00.000Z").atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        LocalDateTime defaultTo = LocalDateTime.now();
-
         // List<Event> events = eventService.findEventByIdParking(id);
 
         if (!eventService.existsByIdParking(id)) {

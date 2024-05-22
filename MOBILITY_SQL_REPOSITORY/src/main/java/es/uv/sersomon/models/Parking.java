@@ -11,11 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// TODO: tabla parkings en plural
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "parking")
 public class Parking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,6 @@ public class Parking {
 
     @Column
     private String direction;
-    @Column(name = "bikes_capacity")
     private Integer bikesCapacity;
 
     @Column

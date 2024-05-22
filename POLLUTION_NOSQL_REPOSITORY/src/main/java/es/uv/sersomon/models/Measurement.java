@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+// TODO: los campos en mayuscula no me funcionan
 @Document("measurements")
 @Data
 public class Measurement {

@@ -1,0 +1,72 @@
+[
+    {
+        "idParking": 1,
+        "operation": "rent",
+        "bikesAvailable": 50,
+        "freeParkingSpots": 20,
+        "timestamp": "2022-03-23T14:15:30"
+    },
+    {
+        "idParking": 2,
+        "operation": "parking",
+        "bikesAvailable": 30,
+        "freeParkingSpots": 40,
+        "timestamp": "2022-03-23T15:20:45"
+    },
+    {
+        "idParking": 3,
+        "operation": "multiple_reposition",
+        "bikesAvailable": 10,
+        "freeParkingSpots": 60,
+        "timestamp": "2022-03-23T16:25:50"
+    },
+    {
+        "idParking": 4,
+        "operation": "rent",
+        "bikesAvailable": 45,
+        "freeParkingSpots": 25,
+        "timestamp": "2022-03-23T17:30:55"
+    },
+    {
+        "idParking": 5,
+        "operation": "parking",
+        "bikesAvailable": 35,
+        "freeParkingSpots": 35,
+        "timestamp": "2022-03-23T18:35:00"
+    },
+    {
+        "idParking": 6,
+        "operation": "multiple_witdraw",
+        "bikesAvailable": 20,
+        "freeParkingSpots": 50,
+        "timestamp": "2022-03-23T19:40:05"
+    },
+    {
+        "idParking": 7,
+        "operation": "rent",
+        "bikesAvailable": 55,
+        "freeParkingSpots": 15,
+        "timestamp": "2022-03-23T20:45:10"
+    },
+    {
+        "idParking": 8,
+        "operation": "parking",
+        "bikesAvailable": 25,
+        "freeParkingSpots": 45,
+        "timestamp": "2022-03-23T21:50:15"
+    },
+    {
+        "idParking": 9,
+        "operation": "multiple_reposition",
+        "bikesAvailable": 5,
+        "freeParkingSpots": 65,
+        "timestamp": "2022-03-23T22:55:20"
+    },
+    {
+        "idParking": 10,
+        "operation": "rent",
+        "bikesAvailable": 60,
+        "freeParkingSpots": 10,
+        "timestamp": "2022-03-23T23:00:25"
+    }
+]

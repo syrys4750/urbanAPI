@@ -18,7 +18,7 @@ import es.uv.sersomon.repositories.EventRepository;
 import es.uv.sersomon.services.EventService;
 
 @SpringBootApplication
-public class MobilityNosqlRepositoryApplication implements CommandLineRunner {
+public class MobilityNosqlRepositoryApplication {
 
 	@Autowired
 	EventService eventService;
@@ -30,18 +30,6 @@ public class MobilityNosqlRepositoryApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MobilityNosqlRepositoryApplication.class, args);
-	}
-
-	// TODO: es una forma válida de añadir datos o tengo que usar el fichero?
-	@Override
-	public void run(String... args) throws Exception {
-		LOGGER.info("Creating events");
-		eventService.createEvent(new Event("6453-ydydy-123636-132", 2, Operations.PARKING.toString(), 4, 2,
-				LocalDate
-						.ofInstant(Instant.ofEpochMilli(1715859130),
-								TimeZone.getDefault().toZoneId())
-						.atStartOfDay()));
-
 	}
 
 }
