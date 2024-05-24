@@ -60,5 +60,4 @@ public class MeasurementController {
             return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
         }
     }
-
 }
