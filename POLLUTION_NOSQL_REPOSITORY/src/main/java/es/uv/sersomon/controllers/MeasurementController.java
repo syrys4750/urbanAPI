@@ -29,8 +29,14 @@ public class MeasurementController {
     private MeasurementService measurementService;
 
     @PostMapping("/estacion/{id}")
-    public ResponseEntity<Measurement> createMeasurement(@RequestBody @Validated Measurement measurement) {
-
+    public ResponseEntity<?> createMeasurement(@RequestBody @Validated Measurement measurement, @PathVariable int id) {
+        if (measurement.getIdStation() == null) {
+            measurement.setIdStation(Integer.valueOf(id));
+        }
+        if (measurement.getIdStation() != id) {
+            return new ResponseEntity<>("Value of path variable id " + id + " and idStation "
+                    + measurement.getIdStation() + " is different", HttpStatus.BAD_REQUEST);
+        }
         Measurement measurementCreated = measurementService.createMeasurement(measurement);
         return new ResponseEntity<>(measurementCreated, HttpStatus.OK);
     }

@@ -39,8 +39,4 @@ public class StationService {
         return stationRepository.existsById(id);
     }
 
-    public boolean existsByDirectionAltitudeLatitude(String direction, float altitude, float latitude) {
-        return stationRepository.existsByDirectionAndAltitudeAndLatitude(direction, altitude, latitude);
-    }
-
 }

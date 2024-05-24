@@ -1,6 +1,7 @@
 package es.uv.sersomon.controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,17 @@ public class StationController {
         return new ResponseEntity<>(stationService.findAllStations(), HttpStatus.OK);
     }
 
+    @GetMapping("/estaciones/{id}")
+    public ResponseEntity<Station> findStationById(@PathVariable int id) {
+        Optional<Station> station = stationService.findStationById(id);
+        if (station.isEmpty()) {
+            return new ResponseEntity<>(new Station(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(station.get(), HttpStatus.OK);
+    }
+
     @PostMapping("/estacion")
     public ResponseEntity<Station> createStation(@RequestBody @Valid Station station) {
-
-        if (stationService.existsByDirectionAltitudeLatitude(station.getDirection(), station.getAltitude().floatValue(),
-                station.getLatitude().floatValue())) {
-            throw new AlreadyExistsStationException("Station already exists on direction " + station.getDirection()
-                    + ", altitude " + station.getAltitude() + ", latitude " + station.getLatitude());
-        }
 
         Station createdStation = stationService.createStation(station);
         return new ResponseEntity<>(createdStation, HttpStatus.OK);
@@ -49,8 +53,9 @@ public class StationController {
 
     @PutMapping("/estacion/{id}")
     public ResponseEntity<Station> updateStation(@PathVariable int id, @RequestBody @Valid Station station) {
-        if (id != station.getId())
-            throw new InvalidStationException("Provided param /id and id on station entity do not match");
+        if (station.getId() == null) {
+            station.setId(id);
+        }
         if (!stationService.existsStation(station.getId()))
             throw new NotFoundStationException("Station not found");
 
@@ -60,7 +65,7 @@ public class StationController {
 
     @DeleteMapping("/estacion/{id}")
     public ResponseEntity<String> deleteStation(@PathVariable Integer id) {
-        if (stationService.existsStation(id) == false)
+        if (!stationService.existsStation(id))
             throw new NotFoundStationException("Station not found");
 
         stationService.deleteStationById(id);

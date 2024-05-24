@@ -13,14 +13,15 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "stations")
+@SequenceGenerator(name = "station_seq", sequenceName = "station_sequence", initialValue = 11, allocationSize = 1)
 public class Station {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "station_seq")
     private Integer id;
     @NotBlank
     private String direction;
     @NotNull
-    private Float altitude;
+    private Double altitude;
     @NotNull
-    private Float latitude;
+    private Double latitude;
 }
