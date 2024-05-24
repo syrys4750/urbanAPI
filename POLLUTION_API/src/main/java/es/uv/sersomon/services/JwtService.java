@@ -34,12 +34,12 @@ public class JwtService {
         this.verifier = JWT.require(this.algorithm).build();
     }
 
-    public String generateAccessToken(String username, List<String> claims) {
+    public String generateAccessToken(int id, String claim) {
         return JWT.create()
-                .withSubject(username)
+                .withSubject(String.valueOf(id))
                 .withExpiresAt(new Date(System.currentTimeMillis() + this.duration))
                 .withIssuer(this.issuer)
-                .withClaim("roles", claims)
+                .withClaim("role", claim)
                 .sign(this.algorithm);
     }
 
@@ -54,7 +54,7 @@ public class JwtService {
 
     public int getIdFromToken(String token) {
         DecodedJWT decoded = this.verifier.verify(token);
-        return Integer.valueOf(decoded.getSubject()).intValue();
+        return Integer.parseInt(decoded.getSubject());
     }
 
     public SimpleGrantedAuthority getRoleFromToken(String token) {
