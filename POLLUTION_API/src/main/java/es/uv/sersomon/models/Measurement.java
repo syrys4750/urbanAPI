@@ -1,17 +1,13 @@
 package es.uv.sersomon.models;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-// TODO: los campos en mayuscula no me funcionan
-@Document("measurements")
 @Data
+@AllArgsConstructor
 public class Measurement {
     @NotNull
     private Integer idStation;
@@ -25,5 +21,4 @@ public class Measurement {
     private Double vocs_nmhc;
     @NotNull
     private Double pm2_5;
-
 }

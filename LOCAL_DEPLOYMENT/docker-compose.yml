@@ -5,7 +5,7 @@ services:
     image: mysql:8.0
     container_name: mysql_pollution
     ports:
-      - 3306:3306
+      - 127.0.0.1:3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=urbanAPIpassword
       - MYSQL_DATABASE=pollution
@@ -13,12 +13,12 @@ services:
     image: mongo:7.0.9-jammy
     container_name: mongo_pollution
     ports:
-      - 27017:27017
+      - 127.0.0.1:27017:27017
   sql_db_mobility:
     image: mysql:8.0
     container_name: mysql_mobility
     ports:
-      - 3307:3306
+      - 127.0.0.1:3307:3306
     environment:
       - MYSQL_ROOT_PASSWORD=urbanAPIpassword
       - MYSQL_DATABASE=mobility
@@ -26,4 +26,4 @@ services:
     image: mongo:7.0.9-jammy
     container_name: mongo_mobility
     ports:
-      - 27018:27017
+      - 127.0.0.1:27018:27017

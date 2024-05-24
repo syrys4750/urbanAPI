@@ -25,8 +25,9 @@ public class DataLoader {
             mapper.registerModule(new JavaTimeModule());
             TypeReference<List<Measurement>> typeReference = new TypeReference<List<Measurement>>() {
             };
-            InputStream inputStream = getClass().getResourceAsStream("/data.json");
             try {
+                InputStream inputStream = getClass().getResourceAsStream("/data.json");
+
                 List<Measurement> measurements = mapper.readValue(inputStream, typeReference);
                 if (measurementRepository.count() == 0) {
                     measurementRepository.saveAll(measurements);

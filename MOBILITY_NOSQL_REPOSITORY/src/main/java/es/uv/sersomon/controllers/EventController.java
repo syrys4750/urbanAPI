@@ -71,20 +71,23 @@ public class EventController {
 
     }
 
-    @PostMapping("/evento")
-    public ResponseEntity<?> createEvent(@RequestBody Event event) {
-        // if (eventService.existsById(event.getId()))
-        // return new ResponseEntity<String>("Event already exists",
-        // HttpStatus.CONFLICT);
+    @PostMapping("/evento/{id}")
+    public ResponseEntity<?> createEvent(@RequestBody Event event, @PathVariable int id) {
+        if (!eventService.existsByIdParking(id)) {
+            return new ResponseEntity<>("Parking with id " + id + " not found", HttpStatus.NOT_FOUND);
+        }
         if (!PERMITTED_OPERATIONS.contains(event.getOperation())) {
             return new ResponseEntity<String>("Operation type " + event.getOperation() + " is not permitted",
                     HttpStatus.BAD_REQUEST);
+        }
+        if (event.getId() == null) {
+            event.setIdParking(Integer.valueOf(id));
         }
         Event createdEvent = eventService.createEvent(event);
         return new ResponseEntity<Event>(createdEvent, HttpStatus.CREATED);
     }
 
-    @GetMapping("/top10AparcamientosDisponibles")
+    @GetMapping("/top10")
     public ResponseEntity<List<Integer>> findTop10ParkingsByDisponibility() {
         return new ResponseEntity<>(
                 eventService.findTop10ParkingsByDisponibility(), HttpStatus.OK);

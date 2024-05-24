@@ -27,9 +27,11 @@ public class ParkingService {
         return parkingRepository.findAll();
     }
 
-    public Parking updateParking(Parking parking) {
-        if (parkingRepository.existsById(parking.getId()))
+    public Parking updateParking(int id, Parking parking) {
+        if (parkingRepository.existsById(Integer.valueOf(id))) {
+            parking.setId(Integer.valueOf(id));
             return parkingRepository.save(parking);
+        }
 
         return new Parking();
 
@@ -41,5 +43,10 @@ public class ParkingService {
 
     public boolean existsById(int id) {
         return parkingRepository.existsById(id);
+    }
+
+    public boolean isParkingAlreadyPresent(Parking parking) {
+        return parkingRepository.existsByDirectionAndBikesCapacityAndLatitudeAndLongitude(parking.getDirection(),
+                parking.getBikesCapacity(), parking.getLatitude(), parking.getLongitude());
     }
 }

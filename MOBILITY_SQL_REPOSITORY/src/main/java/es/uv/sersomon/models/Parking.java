@@ -23,6 +23,7 @@ public class Parking {
 
     @Column
     private String direction;
+    @Column
     private Integer bikesCapacity;
 
     @Column

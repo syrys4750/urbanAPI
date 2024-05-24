@@ -37,6 +37,9 @@ public class ParkingController {
     @PostMapping("/aparcamiento")
     public ResponseEntity<Parking> createParking(@RequestBody Parking parkingRequest) {
         LOGGER.debug("Create Parking with ID " + parkingRequest.getId());
+        if (parkingService.isParkingAlreadyPresent(parkingRequest)) {
+            return new ResponseEntity<Parking>(new Parking(), HttpStatus.CONFLICT);
+        }
         Parking parking = parkingService.createParking(parkingRequest);
 
         return new ResponseEntity<Parking>(parking, HttpStatus.OK);
@@ -50,13 +53,11 @@ public class ParkingController {
 
     @PutMapping("aparcamiento/{id}")
     public ResponseEntity<Parking> updateParkingById(@PathVariable int id, @RequestBody Parking parking) {
-        if (id != parking.getId())
-            return new ResponseEntity<Parking>(new Parking(), HttpStatus.BAD_REQUEST);
-        Parking savedParking = parkingService.updateParking(parking);
+        Parking savedParking = parkingService.updateParking(id, parking);
         if (savedParking.getId() == null) {
             return new ResponseEntity<Parking>(new Parking(), HttpStatus.NOT_FOUND);
         } else
-            return new ResponseEntity<Parking>(new Parking(), HttpStatus.ACCEPTED);
+            return new ResponseEntity<Parking>(savedParking, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/aparcamientos")

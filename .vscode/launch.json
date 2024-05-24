@@ -50,6 +50,16 @@
             "projectName": "MOBILITY_API",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PollutionApiApplication<POLLUTION_API>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uv.sersomon.PollutionApiApplication",
+            "projectName": "POLLUTION_API",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
