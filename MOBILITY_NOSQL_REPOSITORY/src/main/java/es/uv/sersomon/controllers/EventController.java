@@ -44,7 +44,7 @@ public class EventController {
     private static final List<String> PERMITTED_OPERATIONS = Arrays.stream(Operations.values())
             .map(Operations::toString).collect(Collectors.toList());
 
-    @GetMapping("/evento/{id}/status")
+    @GetMapping("/aparcamiento/{id}/status")
     public ResponseEntity<?> findEventById(@PathVariable("id") int id,
             @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
@@ -82,6 +82,12 @@ public class EventController {
         }
         Event createdEvent = eventService.createEvent(event);
         return new ResponseEntity<Event>(createdEvent, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/top10AparcamientosDisponibles")
+    public ResponseEntity<List<Integer>> findTop10ParkingsByDisponibility() {
+        return new ResponseEntity<>(
+                eventService.findTop10ParkingsByDisponibility(), HttpStatus.OK);
     }
 
 }

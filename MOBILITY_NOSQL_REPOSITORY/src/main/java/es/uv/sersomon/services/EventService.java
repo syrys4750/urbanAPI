@@ -36,4 +36,8 @@ public class EventService {
         return eventRepository.findFirstByIdParkingOrderByTimestampDesc(id);
     }
 
+    public List<Integer> findTop10ParkingsByDisponibility() {
+        return eventRepository.findTop10OrderByBikesAvailableDesc();
+    }
+
 }
