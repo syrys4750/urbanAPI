@@ -1,8 +1,5 @@
 package es.uv.sersomon.models;
 
-import java.math.BigDecimal;
-
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,12 +8,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Station {
-    private Integer id;
-    @NotBlank
-    private String direction;
+public class AirQuality {
     @NotNull
-    private BigDecimal altitude;
+    private Double nitricOxides;
     @NotNull
-    private BigDecimal latitude;
+    private Double nitrogenDioxides;
+    @NotNull
+    private Double vocs_nmhc;
+    @NotNull
+    private Double pm2_5;
 }

@@ -8,7 +8,8 @@
             "mainClass": "es.uv.sersomon.MobilitySqlRepositoryApplication",
             "projectName": "MOBILITY_SQL_REPOSITORY",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=65371 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=MOBILITY_SQL_REPOSITORY"
         },
         {
             "type": "java",
@@ -29,7 +30,8 @@
             "mainClass": "es.uv.sersomon.PollutionSqlRepositoryApplication",
             "projectName": "POLLUTION_SQL_REPOSITORY",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=65407 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=POLLUTION_SQL_REPOSITORY"
         },
         {
             "type": "java",
@@ -39,7 +41,8 @@
             "mainClass": "es.uv.sersomon.PollutionNosqlRepositoryApplication",
             "projectName": "POLLUTION_NOSQL_REPOSITORY",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=65399 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=POLLUTION_NOSQL_REPOSITORY"
         },
         {
             "type": "java",
@@ -49,7 +52,8 @@
             "mainClass": "es.uv.sersomon.MobilityApiApplication",
             "projectName": "MOBILITY_API",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=65434 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=MOBILITY_API"
         },
         {
             "type": "java",
@@ -58,6 +62,27 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "es.uv.sersomon.PollutionApiApplication",
             "projectName": "POLLUTION_API",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=65389 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=POLLUTION_API"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AuthApiApplication<AUTH_API>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uv.sersomon.AuthApiApplication",
+            "projectName": "AUTH_API",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AggregatedNosqlRepositoryApplication<AGGREGATED_NOSQL_REPOSITORY>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uv.sersomon.AggregatedNosqlRepositoryApplication",
+            "projectName": "AGGREGATED_NOSQL_REPOSITORY",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

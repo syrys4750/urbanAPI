@@ -27,3 +27,8 @@ services:
     container_name: mongo_mobility
     ports:
       - 127.0.0.1:27018:27017
+  nosql_db_aggregate:
+    image: mongo:7.0.9-jammy
+    container_name: mongo_aggregate
+    ports:
+      - 127.0.0.1:27019:27017

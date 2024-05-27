@@ -1,14 +1,10 @@
-package es.uv.sersomon.services;
+package es.uv.sersomon.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -57,11 +53,10 @@ public class JwtService {
         return Integer.parseInt(decoded.getSubject());
     }
 
-    public SimpleGrantedAuthority getRoleFromToken(String token) {
+    public String getRoleFromToken(String token) {
         DecodedJWT decoded = this.verifier.verify(token);
         String role = decoded.getClaim("role").asString();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-        return authority;
+        return role;
     }
 
     public Boolean isTokenExpired(String token) {
@@ -77,5 +72,4 @@ public class JwtService {
     public String getTokenHeaderPrefix() {
         return "Bearer ";
     }
-
 }
