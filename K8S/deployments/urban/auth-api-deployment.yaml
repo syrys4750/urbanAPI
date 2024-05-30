@@ -29,7 +29,12 @@ spec:
       - name: auth-api
         image: sersomon/auth_api:latest
         env:
-          - name: SPRING_PROFILES_ACTIVE
-            value: k8s
+        - name: SPRING_PROFILES_ACTIVE
+          value: k8s
+        - name: SYS.TOKEN.KEY
+          valueFrom:
+            secretKeyRef:
+              name: auth-api-secret
+              key: auth-key
         ports:
         - containerPort: 8080

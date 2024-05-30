@@ -32,5 +32,10 @@ spec:
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: k8s
+          - name: APP.JWT.KEY
+            valueFrom:
+              secretKeyRef:
+                name: municipal-api-secret
+                key: admin-token
         ports:
         - containerPort: 8080
