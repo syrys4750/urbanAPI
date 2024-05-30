@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/api/v1/estaciones", "/api/v1/estacion/**/status").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/estaciones", "/api/v1/estacion/*/status").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/estacion").hasAnyAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/estacion/**").hasAnyAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/estacion/**").hasAnyAuthority("ROLE_ADMIN")

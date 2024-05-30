@@ -25,7 +25,7 @@ public class Station {
     @NotBlank
     private String direction;
     @NotNull
-    private Double altitude;
+    private Double longitude;
     @NotNull
     private Double latitude;
 }

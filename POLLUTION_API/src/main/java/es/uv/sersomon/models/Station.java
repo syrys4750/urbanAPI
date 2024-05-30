@@ -1,7 +1,5 @@
 package es.uv.sersomon.models;
 
-import java.math.BigDecimal;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,7 +14,7 @@ public class Station {
     @NotBlank
     private String direction;
     @NotNull
-    private BigDecimal altitude;
+    private Double longitude;
     @NotNull
-    private BigDecimal latitude;
+    private Double latitude;
 }

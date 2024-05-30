@@ -10,7 +10,7 @@ services:
       - MYSQL_ROOT_PASSWORD=urbanAPIpassword
       - MYSQL_DATABASE=pollution
   nosql_db_pollution:
-    image: mongo:7.0.9-jammy
+    image: mongo:4.4.6
     container_name: mongo_pollution
     ports:
       - 127.0.0.1:27017:27017
@@ -23,12 +23,12 @@ services:
       - MYSQL_ROOT_PASSWORD=urbanAPIpassword
       - MYSQL_DATABASE=mobility
   nosql_db_mobility:
-    image: mongo:7.0.9-jammy
+    image: mongo:4.4.6
     container_name: mongo_mobility
     ports:
       - 127.0.0.1:27018:27017
   nosql_db_aggregate:
-    image: mongo:7.0.9-jammy
+    image: mongo:4.4.6
     container_name: mongo_aggregate
     ports:
       - 127.0.0.1:27019:27017

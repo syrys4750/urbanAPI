@@ -4,6 +4,27 @@
         "operation": "rent",
         "bikesAvailable": 50,
         "freeParkingSpots": 20,
+        "timestamp": "2022-03-23T10:15:30"
+    },
+    {
+        "idParking": 1,
+        "operation": "parking",
+        "bikesAvailable": 50,
+        "freeParkingSpots": 20,
+        "timestamp": "2022-03-23T11:15:30"
+    },
+    {
+        "idParking": 1,
+        "operation": "rent",
+        "bikesAvailable": 32,
+        "freeParkingSpots": 10,
+        "timestamp": "2022-03-23T12:15:30"
+    },
+    {
+        "idParking": 1,
+        "operation": "parking",
+        "bikesAvailable": 50,
+        "freeParkingSpots": 2,
         "timestamp": "2022-03-23T14:15:30"
     },
     {

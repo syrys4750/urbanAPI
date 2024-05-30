@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: municipal-api
+spec:
+  selector:
+    app: municipal-api
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: municipal-api
+spec:
+  selector:
+    matchLabels:
+      app: municipal-api
+  template:
+    metadata:
+      labels:
+        app: municipal-api
+        function: urban
+    spec:
+      containers:
+      - name: municipal-api
+        image: sersomon/municipal_api:latest
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: k8s
+        ports:
+        - containerPort: 8080

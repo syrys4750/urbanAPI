@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ParkingPollution {
+public class ParkingBikesPollution {
 
-    private Integer id;
+    private Integer idParking; // this way, _id is not overriden
     private Double averageBikesAvailable;
     private AirQuality airQuality;
 }

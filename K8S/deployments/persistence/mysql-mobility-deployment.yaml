@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-mobility
+  namespace: urban
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql-mobility
+  ports:
+  - port: 3306
+    targetPort: 3306
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-mobility
+  namespace: urban
+spec:
+  selector:
+    matchLabels:
+      app: mysql-mobility
+  template:
+    metadata:
+      labels:
+        app: mysql-mobility
+        function: persistence
+    spec:
+      containers:
+      - name: mysql-mobility
+        image: mysql:8.0
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: urbanAPIpassword
+          - name: MYSQL_DATABASE
+            value: mobility
+        ports:
+        - containerPort: 3306

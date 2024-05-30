@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mobility-nosql-repository
+spec:
+  selector:
+    app: mobility-nosql-repository
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobility-nosql-repository
+spec:
+  selector:
+    matchLabels:
+      app: mobility-nosql-repository
+  template:
+    metadata:
+      labels:
+        app: mobility-nosql-repository
+        function: urban
+    spec:
+      containers:
+      - name: mobility-nosql-repository
+        image: sersomon/mobility_nosql_repository:latest
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: k8s
+        ports:
+        - containerPort: 8080

@@ -21,6 +21,7 @@ public class AuthApiApplication implements CommandLineRunner {
 		System.out.println("ADMIN JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_ADMIN"));
 		System.out.println("STATION JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_STATION"));
 		System.out.println("PARKING JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_PARKING"));
+		System.out.println("SERVICE JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_SERVICE"));
 	}
 
 }

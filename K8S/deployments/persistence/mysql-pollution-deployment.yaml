@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-pollution
+  namespace: urban
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql-pollution
+  ports:
+  - port: 3306
+    targetPort: 3306
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-pollution
+  namespace: urban
+spec:
+  selector:
+    matchLabels:
+      app: mysql-pollution
+  template:
+    metadata:
+      labels:
+        app: mysql-pollution
+        function: persistence
+    spec:
+      containers:
+      - name: mysql-pollution
+        image: mysql:8.0
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: urbanAPIpassword
+          - name: MYSQL_DATABASE
+            value: pollution
+        ports:
+        - containerPort: 3306

@@ -17,4 +17,9 @@ public class AggregateService {
         return aggregateRepository.insert(aggregated);
     }
 
+    public Aggregate getLatestAggregated() {
+
+        return aggregateRepository.findFirstByOrderByTimeStampDesc();
+    }
+
 }

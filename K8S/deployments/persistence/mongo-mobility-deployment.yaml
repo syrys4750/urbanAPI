@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-mobility
+  namespace: urban
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-mobility
+  ports:
+  - port: 27017
+    targetPort: 27017
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-mobility
+  namespace: urban
+spec:
+  selector:
+    matchLabels:
+      app: mongo-mobility
+  template:
+    metadata:
+      labels:
+        app: mongo-mobility
+        function: persistence
+    spec:
+      containers:
+      - name: mongo-mobility
+        image: mongo:4.4.6
+        ports:
+        - containerPort: 27017

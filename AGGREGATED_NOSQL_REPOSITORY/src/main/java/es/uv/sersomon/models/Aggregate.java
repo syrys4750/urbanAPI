@@ -15,5 +15,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Aggregate {
     private LocalDateTime timeStamp;
-    private List<ParkingPollution> aggregatedData;
+    private List<ParkingBikesPollution> aggregatedData;
 }

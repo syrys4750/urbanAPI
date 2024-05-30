@@ -25,7 +25,12 @@ public class AggregateController {
     @PostMapping("/aggregateData")
     public ResponseEntity<Aggregate> addAggregate(@RequestBody @Valid Aggregate aggregated) {
         Aggregate createdAggregate = aggregateService.addAggregate(aggregated);
-
         return new ResponseEntity<>(createdAggregate, HttpStatus.OK);
     }
+
+    @GetMapping("/aggregatedData")
+    public ResponseEntity<Aggregate> getLatestAggregated() {
+        return new ResponseEntity<>(aggregateService.getLatestAggregated(), HttpStatus.OK);
+    }
+
 }

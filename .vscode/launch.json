@@ -74,7 +74,8 @@
             "mainClass": "es.uv.sersomon.AuthApiApplication",
             "projectName": "AUTH_API",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=62801 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=AUTH_API"
         },
         {
             "type": "java",
@@ -83,6 +84,17 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "es.uv.sersomon.AggregatedNosqlRepositoryApplication",
             "projectName": "AGGREGATED_NOSQL_REPOSITORY",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=62792 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=AGGREGATED_NOSQL_REPOSITORY"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MunicipalApiApplication<MUNICIPAL_API>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uv.sersomon.MunicipalApiApplication",
+            "projectName": "MUNICIPAL_API",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

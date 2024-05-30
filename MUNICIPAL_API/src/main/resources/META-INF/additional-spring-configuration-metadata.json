@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "app.service.parking.url",
+    "type": "java.lang.String",
+    "description": "A description for 'app.service.parking.url'"
+  },
+  {
+    "name": "app.service.station.url",
+    "type": "java.lang.String",
+    "description": "A description for 'app.service.station.url'"
+  },
+  {
+    "name": "app.service.aggregate.nosql.url",
+    "type": "java.lang.String",
+    "description": "A description for 'app.service.aggregate.nosql.url'"
+  },
+  {
+    "name": "app.jwt.key",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.key'"
+  },
+  {
+    "name": "app.repository.auth.url",
+    "type": "java.lang.String",
+    "description": "A description for 'app.repository.auth.url'"
+  }
+]}

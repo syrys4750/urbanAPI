@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-api
+spec:
+  selector:
+    app: auth-api
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-api
+spec:
+  selector:
+    matchLabels:
+      app: auth-api
+  template:
+    metadata:
+      labels:
+        app: auth-api
+        function: urban
+    spec:
+      containers:
+      - name: auth-api
+        image: sersomon/auth_api:latest
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: k8s
+        ports:
+        - containerPort: 8080

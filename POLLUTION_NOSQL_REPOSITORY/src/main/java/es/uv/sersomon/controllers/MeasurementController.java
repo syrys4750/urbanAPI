@@ -8,6 +8,7 @@ import es.uv.sersomon.services.MeasurementService;
 import jakarta.websocket.server.PathParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,12 +47,15 @@ public class MeasurementController {
             @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
 
+        List<Measurement> measurements = new ArrayList<>();
         if (from == null || to == null) {
+
             Measurement latestMeasurement = measurementService.findLatestMeasurementByStation(id);
-            return new ResponseEntity<>(latestMeasurement, HttpStatus.OK);
+            measurements.add(latestMeasurement);
+            return new ResponseEntity<>(measurements, HttpStatus.OK);
         } else {
-            List<Measurement> measurementsFromTo = measurementService.findMeasurementByStationIdFromTo(id, from, to);
-            return new ResponseEntity<>(measurementsFromTo, HttpStatus.OK);
+            measurements = measurementService.findMeasurementByStationIdFromTo(id, from, to);
+            return new ResponseEntity<>(measurements, HttpStatus.OK);
         }
     }
 }

@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pollution-api
+spec:
+  selector:
+    app: pollution-api
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pollution-api
+  namespace: urban
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pollution-api
+  template:
+    metadata:
+      labels:
+        app: pollution-api
+        function: urban
+    spec:
+      containers:
+        - name: pollution-api
+          image: sersomon/pollution_api:latest
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+          ports:
+          - containerPort: 8080

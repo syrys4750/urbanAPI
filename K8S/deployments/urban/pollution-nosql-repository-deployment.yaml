@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pollution-nosql-repository
+spec:
+  selector:
+    app: pollution-nosql-repository
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pollution-nosql-repository
+  namespace: urban
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pollution-nosql-repository
+  template:
+    metadata:
+      labels:
+        app: pollution-nosql-repository
+        function: urban
+    spec:
+      containers:
+        - name: pollution-nosql-repository
+          image: sersomon/pollution_nosql_repository:latest
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+          ports:
+          - containerPort: 8080

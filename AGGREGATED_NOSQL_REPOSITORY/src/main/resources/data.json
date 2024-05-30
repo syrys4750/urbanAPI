@@ -1,0 +1,107 @@
+[
+  {
+    "timeStamp": "2024-04-01T12:00:00Z",
+    "aggregatedData": [
+      {
+        "idParking": 1,
+        "averageBikesAvailable": 3.5,
+        "airQuality": {
+          "nitricOxides": 10.5,
+          "nitrogenDioxides": 5.2,
+          "vocs_nmhc": 6.8,
+          "pm2_5": 7.1
+        }
+      },
+      {
+        "idParking": 2,
+        "averageBikesAvailable": 10.6,
+        "airQuality": {
+          "nitricOxides": 12.5,
+          "nitrogenDioxides": 7.2,
+          "vocs_nmhc": 16.8,
+          "pm2_5": 1.1
+        }
+      },
+      {
+        "idParking": 3,
+        "averageBikesAvailable": 5.2,
+        "airQuality": {
+          "nitricOxides": 8.4,
+          "nitrogenDioxides": 4.8,
+          "vocs_nmhc": 10.2,
+          "pm2_5": 6.3
+        }
+      },
+      {
+        "idParking": 4,
+        "averageBikesAvailable": 7.8,
+        "airQuality": {
+          "nitricOxides": 15.0,
+          "nitrogenDioxides": 6.5,
+          "vocs_nmhc": 12.0,
+          "pm2_5": 3.4
+        }
+      },
+      {
+        "idParking": 5,
+        "averageBikesAvailable": 6.9,
+        "airQuality": {
+          "nitricOxides": 11.2,
+          "nitrogenDioxides": 5.9,
+          "vocs_nmhc": 9.7,
+          "pm2_5": 2.5
+        }
+      },
+      {
+        "idParking": 6,
+        "averageBikesAvailable": 4.1,
+        "airQuality": {
+          "nitricOxides": 9.5,
+          "nitrogenDioxides": 3.6,
+          "vocs_nmhc": 8.3,
+          "pm2_5": 5.2
+        }
+      },
+      {
+        "idParking": 7,
+        "averageBikesAvailable": 8.7,
+        "airQuality": {
+          "nitricOxides": 14.3,
+          "nitrogenDioxides": 6.8,
+          "vocs_nmhc": 11.4,
+          "pm2_5": 4.7
+        }
+      },
+      {
+        "idParking": 8,
+        "averageBikesAvailable": 3.2,
+        "airQuality": {
+          "nitricOxides": 7.1,
+          "nitrogenDioxides": 4.1,
+          "vocs_nmhc": 6.0,
+          "pm2_5": 3.9
+        }
+      },
+      {
+        "idParking": 9,
+        "averageBikesAvailable": 9.5,
+        "airQuality": {
+          "nitricOxides": 13.8,
+          "nitrogenDioxides": 7.4,
+          "vocs_nmhc": 15.1,
+          "pm2_5": 2.9
+        }
+      },
+      {
+        "idParking": 10,
+        "averageBikesAvailable": 5.8,
+        "airQuality": {
+          "nitricOxides": 10.0,
+          "nitrogenDioxides": 5.5,
+          "vocs_nmhc": 9.0,
+          "pm2_5": 6.6
+        }
+      }
+    ]
+  }
+]
