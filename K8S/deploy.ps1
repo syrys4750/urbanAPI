@@ -1,5 +1,13 @@
 #!/bin/bash
 kubectl create namespace urban
+
+kubectl apply -f configmaps/apis-url-configmap.yaml
+kubectl apply -f configmaps/persistence-url-configmap.yaml
+
+kubectl apply -f secrets/auth-api-secret.yaml
+kubectl apply -f secrets/municipal-api-secret.yaml
+kubectl apply -f secrets/mysql-secret.yaml
+
 # Desplegar todos los archivos de persistencia
 kubectl apply -f deployments/persistence/mongo-aggregate-deployment.yaml
 kubectl apply -f deployments/persistence/mongo-mobility-deployment.yaml

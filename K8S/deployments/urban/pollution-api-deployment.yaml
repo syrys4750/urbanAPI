@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pollution-api
+  namespace: urban
 spec:
   selector:
     app: pollution-api
@@ -33,5 +34,20 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: k8s
+            - name: POLLUTION-SQL-REPOSITORY
+              valueFrom:
+                configMapKeyRef:
+                  name: apis-url-configmap
+                  key: pollution-sql-repository
+            - name: POLLUTION-NOSQL-REPOSITORY
+              valueFrom:
+                configMapKeyRef:
+                  name: apis-url-configmap
+                  key: pollution-nosql-repository
+            - name: AUTH-API
+              valueFrom:
+                configMapKeyRef:
+                  name: apis-url-configmap
+                  key: auth-api
           ports:
           - containerPort: 8080

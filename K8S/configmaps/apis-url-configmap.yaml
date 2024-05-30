@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apis-url-configmap
+data:
+  aggregated-nosql-repository: http://aggregate-nosql-repository:8080/api/v1
+  auth-api: http://auth-api:8080/api/v1
+  mobility-api: http://mobility-api:8080/api/v1
+  mobility-nosql-repository: http://mobility-nosql-repository:8080/api/v1
+  mobility-sql-repository: http://mobility-sql-repository:8080/api/v1
+  municipal-api: http://municipal-api:8080/api/v1
+  pollution-api: http://pollution-api:8080/api/v1
+  pollution-nosql-repository: http://pollution-nosql-repository:8080/api/v1
+  pollution-sql-repository: http://pollution-sql-repository:8080/api/v1
+

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pollution-sql-repository
+  namespace: urban
 spec:
   selector:
     app: pollution-sql-repository
@@ -33,5 +34,20 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: k8s
+            - name: MYSQL-POLLUTION
+              valueFrom:
+                configMapKeyRef:
+                  name: persistence-url-configmap
+                  key: mysql-pollution
+            - name: MYSQL-USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: username
+            - name: MYSQL-PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
           ports:
           - containerPort: 8080

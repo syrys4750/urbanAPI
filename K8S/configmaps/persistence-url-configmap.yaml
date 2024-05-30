@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: persistence-url-configmap
+data:
+  mongo-aggregate: mongodb://mongo-aggregate:27017/aggregate
+  mongo-pollution: mongodb://mongo-pollution:27017/measurements
+  mysql-mobility: jdbc:mysql://mysql-mobility:3306/mobility
+  mysql-pollution: jdbc:mysql://mysql-pollution:3306/pollution
+  mongo-mobility: mongodb://mongo-mobility:27017/events

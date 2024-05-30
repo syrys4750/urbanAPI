@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: municipal-api
+  namespace: urban
 spec:
   selector:
     app: municipal-api
@@ -9,13 +10,13 @@ spec:
   - port: 8080
     targetPort: 8080
 
-
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: municipal-api
+  namespace: urban
 spec:
   selector:
     matchLabels:
@@ -37,5 +38,25 @@ spec:
               secretKeyRef:
                 name: municipal-api-secret
                 key: admin-token
+          - name: MOBILITY-API
+            valueFrom:
+              configMapKeyRef:
+                name: apis-url-configmap
+                key: mobility-api
+          - name: POLLUTION-API
+            valueFrom:
+              configMapKeyRef:
+                name: apis-url-configmap
+                key: pollution-api
+          - name: AUTH-API
+            valueFrom:
+              configMapKeyRef:
+                name: apis-url-configmap
+                key: auth-api
+          - name: AGGREGATED-NOSQL-REPOSITORY
+            valueFrom:
+              configMapKeyRef:
+                name: apis-url-configmap
+                key: aggregated-nosql-repository
         ports:
         - containerPort: 8080

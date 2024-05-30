@@ -32,9 +32,12 @@ spec:
       - name: mysql-pollution
         image: mysql:8.0
         env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: urbanAPIpassword
-          - name: MYSQL_DATABASE
-            value: pollution
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
+        - name: MYSQL_DATABASE
+          value: pollution
         ports:
         - containerPort: 3306

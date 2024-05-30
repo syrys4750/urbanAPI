@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mobility-sql-repository
+  namespace: urban
 spec:
   selector:
     app: mobility-sql-repository
@@ -9,13 +10,13 @@ spec:
   - port: 8080
     targetPort: 8080
 
-
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mobility-sql-repository
+  namespace: urban
 spec:
   selector:
     matchLabels:
@@ -30,7 +31,22 @@ spec:
       - name: mobility-sql-repository
         image: sersomon/mobility_sql_repository:latest
         env:
-          - name: SPRING_PROFILES_ACTIVE
-            value: k8s
+        - name: SPRING_PROFILES_ACTIVE
+          value: k8s
+        - name: MYSQL-MOBILITY
+          valueFrom:
+            configMapKeyRef:
+              name: persistence-url-configmap
+              key: mysql-mobility
+        - name: MYSQL-USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: username
+        - name: MYSQL-PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
         ports:
         - containerPort: 8080
