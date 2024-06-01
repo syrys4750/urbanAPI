@@ -26,10 +26,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminController {
     @Autowired
     RestTemplate restTemplate;
+
     @Value("${app.service.parking.url}")
     private String parkingServiceUrl;
+
     @Value("${app.service.station.url}")
     private String stationServiceUrl;
+
     @Value("${app.jwt.key}")
     private String key;
 
@@ -45,9 +48,9 @@ public class AdminController {
                     HttpMethod.POST,
                     request,
                     Station.class);
-            return new ResponseEntity<>(createdStation.getBody(), HttpStatus.OK);
+            return fixTransferEncodingHeader(new ResponseEntity<>(createdStation.getBody(), HttpStatus.OK));
         } catch (HttpStatusCodeException e) {
-            return new ResponseEntity<>(null, e.getStatusCode());
+            return fixTransferEncodingHeader(new ResponseEntity<>(null, e.getStatusCode()));
         }
     }
 
@@ -68,9 +71,9 @@ public class AdminController {
                     HttpMethod.POST,
                     request,
                     Parking.class);
-            return new ResponseEntity<>(createdParking.getBody(), HttpStatus.OK);
+            return fixTransferEncodingHeader(new ResponseEntity<>(createdParking.getBody(), HttpStatus.OK));
         } catch (HttpStatusCodeException e) {
-            return new ResponseEntity<>(null, e.getStatusCode());
+            return fixTransferEncodingHeader(new ResponseEntity<>(null, e.getStatusCode()));
         }
     }
 
@@ -79,4 +82,10 @@ public class AdminController {
         restTemplate.delete(parkingServiceUrl + "/aparcamiento/" + id);
     }
 
+    private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {
+        HttpHeaders httpHeaders = HttpHeaders.writableHttpHeaders(response.getHeaders());
+        httpHeaders.set("Transfer-Encoding", null);
+
+        return new ResponseEntity<>(response.getBody(), httpHeaders, response.getStatusCode());
+    }
 }

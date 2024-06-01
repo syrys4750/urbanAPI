@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class StationController {
     @Autowired
     RestTemplate restTemplate;
+
     @Value("${app.repository.stations.url}")
     String stationRepositoryUrl;
 
@@ -37,9 +38,10 @@ public class StationController {
         try {
             ResponseEntity<Station> response = restTemplate.postForEntity(stationRepositoryUrl + "/estacion", station,
                     Station.class);
-            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+            return fixTransferEncodingHeader(response);
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
+            return fixTransferEncodingHeader(
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString()));
         }
     }
 
@@ -47,15 +49,18 @@ public class StationController {
     public ResponseEntity<String> deleteStation(@PathVariable int id) {
         try {
             restTemplate.delete(stationRepositoryUrl + "/estacion/" + id);
-            return ResponseEntity.noContent().build();
+            return fixTransferEncodingHeader(ResponseEntity.noContent().build());
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
+            return fixTransferEncodingHeader(
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString()));
         }
     }
 
     @GetMapping("/estaciones")
     public ResponseEntity<Station[]> findAllStations() {
-        return restTemplate.getForEntity(stationRepositoryUrl + "/estaciones", Station[].class);
+        ResponseEntity<Station[]> response = restTemplate.getForEntity(stationRepositoryUrl + "/estaciones",
+                Station[].class);
+        return fixTransferEncodingHeader(response);
     }
 
     @PutMapping("/estacion/{id}")
@@ -72,12 +77,19 @@ public class StationController {
                     entity,
                     Station.class);
 
-            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+            return fixTransferEncodingHeader(ResponseEntity.status(response.getStatusCode()).body(response.getBody()));
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
+            return fixTransferEncodingHeader(
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
-            return ResponseEntity.status(500).body("Internal Server Error");
+            return fixTransferEncodingHeader(ResponseEntity.status(500).body("Internal Server Error"));
         }
     }
 
+    private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {
+        HttpHeaders httpHeaders = HttpHeaders.writableHttpHeaders(response.getHeaders());
+        httpHeaders.set("Transfer-Encoding", null);
+
+        return new ResponseEntity<>(response.getBody(), httpHeaders, response.getStatusCode());
+    }
 }

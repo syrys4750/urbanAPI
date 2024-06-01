@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: urban-ingress
+  namespace: urban
+  labels:
+    name: urban-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/v1/$1
+spec:
+  ingressClassName: nginx
+  rules:
+    # TODO: add vm ip
+    - http:
+        paths:
+          - pathType: Prefix # mobility API
+            path: "/mobility/api/v1/(.*)"
+            backend:
+              service:
+                name: mobility-api
+                port:
+                  number: 8080
+          - pathType: Prefix # pollution API
+            path: "/pollution/api/v1/(.*)"
+            backend:
+              service:
+                name: pollution-api
+                port:
+                  number: 8080
+          - pathType: Prefix # municipal API
+            path: "/municipal/api/v1/(.*)"
+            backend:
+              service:
+                name: municipal-api
+                port:
+                  number: 8080

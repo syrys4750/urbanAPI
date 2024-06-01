@@ -8,11 +8,10 @@ spec:
   selector:
     app: mysql-mobility
   ports:
-  - port: 3306
-    targetPort: 3306
+    - port: 3306
+      targetPort: 3306
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,15 +28,22 @@ spec:
         function: persistence
     spec:
       containers:
-      - name: mysql-mobility
-        image: mysql:8.0
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: password
-        - name: MYSQL_DATABASE
-          value: mobility
-        ports:
-        - containerPort: 3306
+        - name: mysql-mobility
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+            - name: MYSQL_DATABASE
+              value: mobility
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-mobility-pvc-local
+      volumes:
+        - name: mysql-mobility-pvc-local
+          persistentVolumeClaim:
+            claimName: mysql-mobility-pvc-local

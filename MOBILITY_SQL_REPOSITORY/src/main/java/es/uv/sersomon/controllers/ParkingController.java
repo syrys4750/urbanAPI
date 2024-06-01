@@ -32,8 +32,6 @@ public class ParkingController {
     ParkingService parkingService;
 
     // TODO: devolver error si todos los campos son vacios?
-    // TODO: como puedo hacer que el id sea auto incremental si estoy utilizando el
-    // que me viene del Parking
     @PostMapping("/aparcamiento")
     public ResponseEntity<Parking> createParking(@RequestBody Parking parkingRequest) {
         LOGGER.debug("Create Parking with ID " + parkingRequest.getId());
@@ -63,6 +61,7 @@ public class ParkingController {
     @GetMapping("/aparcamientos")
     public ResponseEntity<List<Parking>> findParkings() {
         LOGGER.debug("Find all parkings");
+
         return new ResponseEntity<List<Parking>>(parkingService.findParkings(), HttpStatus.OK);
     }
 

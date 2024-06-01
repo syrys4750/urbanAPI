@@ -7,11 +7,10 @@ spec:
   selector:
     app: mobility-api
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,25 +27,25 @@ spec:
         function: urban
     spec:
       containers:
-      - name: mobility-api
-        image: sersomon/mobility_api:latest
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: k8s
-        - name: MOBILITY-SQL-REPOSITORY
-          valueFrom:
-            configMapKeyRef:
-              name: apis-url-configmap
-              key: mobility-sql-repository
-        - name: MOBILITY-NOSQL-REPOSITORY
-          valueFrom:
-            configMapKeyRef:
-              name: apis-url-configmap
-              key: mobility-nosql-repository
-        - name: AUTH-API
-          valueFrom:
-            configMapKeyRef:
-              name: apis-url-configmap
-              key: auth-api
-        ports:
-        - containerPort: 8080
+        - name: mobility-api
+          image: sersomon/mobility_api:latest
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+            - name: MOBILITY-SQL-REPOSITORY
+              valueFrom:
+                configMapKeyRef:
+                  name: apis-url-configmap
+                  key: mobility-sql-repository
+            - name: MOBILITY-NOSQL-REPOSITORY
+              valueFrom:
+                configMapKeyRef:
+                  name: apis-url-configmap
+                  key: mobility-nosql-repository
+            - name: AUTH-API
+              valueFrom:
+                configMapKeyRef:
+                  name: apis-url-configmap
+                  key: auth-api
+          ports:
+            - containerPort: 8080

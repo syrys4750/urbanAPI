@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class MeasurementController {
     @Autowired
     RestTemplate restTemplate;
+
     @Value("${app.repository.stations.url}")
     String stationsRepositoryUrl;
+
     @Value("${app.repository.measurements.url}")
     String measurementRepositoryUrl;
 
@@ -36,12 +39,13 @@ public class MeasurementController {
     public ResponseEntity<?> createMeasurement(@RequestBody Measurement measurement, @PathVariable int id) {
         try {
             // In case the station does not exists, an exception is thrown
-            restTemplate.getForEntity(stationsRepositoryUrl + "/estaciones/" + id,
-                    Station.class);
-            return restTemplate.postForEntity(measurementRepositoryUrl + "/estacion/" + id, measurement,
-                    Measurement.class);
+            restTemplate.getForEntity(stationsRepositoryUrl + "/estaciones/" + id, Station.class);
+            ResponseEntity<Measurement> response = restTemplate
+                    .postForEntity(measurementRepositoryUrl + "/estacion/" + id, measurement, Measurement.class);
+            return fixTransferEncodingHeader(response);
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
+            return fixTransferEncodingHeader(
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString()));
         }
     }
 
@@ -55,9 +59,17 @@ public class MeasurementController {
                 url += "?from=" + from + "&to=" + to;
             }
             ResponseEntity<Measurement[]> response = restTemplate.getForEntity(url, Measurement[].class);
-            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+            return fixTransferEncodingHeader(ResponseEntity.status(response.getStatusCode()).body(response.getBody()));
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
+            return fixTransferEncodingHeader(
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString()));
         }
+    }
+
+    private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {
+        HttpHeaders httpHeaders = HttpHeaders.writableHttpHeaders(response.getHeaders());
+        httpHeaders.set("Transfer-Encoding", null);
+
+        return new ResponseEntity<>(response.getBody(), httpHeaders, response.getStatusCode());
     }
 }

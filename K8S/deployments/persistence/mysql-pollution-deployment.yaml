@@ -8,11 +8,10 @@ spec:
   selector:
     app: mysql-pollution
   ports:
-  - port: 3306
-    targetPort: 3306
+    - port: 3306
+      targetPort: 3306
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,15 +28,22 @@ spec:
         function: persistence
     spec:
       containers:
-      - name: mysql-pollution
-        image: mysql:8.0
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: password
-        - name: MYSQL_DATABASE
-          value: pollution
-        ports:
-        - containerPort: 3306
+        - name: mysql-pollution
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+            - name: MYSQL_DATABASE
+              value: pollution
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-pollution-pvc-local
+      volumes:
+        - name: mysql-pollution-pvc-local
+          persistentVolumeClaim:
+            claimName: mysql-pollution-pvc-local

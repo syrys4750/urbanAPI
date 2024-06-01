@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,6 @@ public class AggregateController {
         }
 
         private double calculateDistance(double startLat, double startLong, double endLat, double endLong) {
-
                 double dLat = Math.toRadians((endLat - startLat));
                 double dLong = Math.toRadians((endLong - startLong));
 
@@ -63,20 +63,6 @@ public class AggregateController {
                 return EARTH_RADIUS * c;
         }
 
-        /*
-         * This method retrieves all available stations and calculates the distance to
-         * each one.
-         * When a nearby station is found, it checks if there are bikes available.
-         * If bikes are available, this station is marked as the nearest station.
-         *
-         * An alternative approach would be to directly modify the
-         * POLLUTION_NOSQL_REPOSITORY
-         * and the POLLUTION_API to obtain documents sorted by timestamp without
-         * repetition.
-         * However, it is considered important to maintain separation of
-         * responsibilities.
-         * Therefore, the MUNICIPAL_API should not require modifications to another API.
-         */
         private Station getNearestAvailableStationFromApi(Double latitude, Double longitude) {
                 ResponseEntity<Station[]> allStationsPrimitive = restTemplate.getForEntity(
                                 stationServiceUrl + "/estaciones",
@@ -118,8 +104,6 @@ public class AggregateController {
                         Double currentParkingAverageBikesAvailable = currentParkingEvents.stream()
                                         .mapToDouble(Event::getBikesAvailable).average().orElse(0);
 
-                        // ---
-
                         Station nearestStationToParking = getNearestAvailableStationFromApi(parking.getLatitude(),
                                         parking.getLongitude());
                         String urlStation = String.format("%s/%d/status?from=%s&to=%s",
@@ -155,7 +139,7 @@ public class AggregateController {
                 Aggregate aggregate = new Aggregate(LocalDateTime.now(), parkingBikesPollutions);
                 ResponseEntity<Aggregate> createdAggregate = restTemplate
                                 .postForEntity(aggregateServiceUrl + "/aggregateData", aggregate, Aggregate.class);
-                return new ResponseEntity<>(createdAggregate.getBody(), HttpStatus.OK);
+                return fixTransferEncodingHeader(new ResponseEntity<>(createdAggregate.getBody(), HttpStatus.OK));
         }
 
         @GetMapping("/aggregatedData")
@@ -163,7 +147,13 @@ public class AggregateController {
                 ResponseEntity<Aggregate> createdAggregate = restTemplate
                                 .getForEntity(aggregateServiceUrl + "/aggregatedData", Aggregate.class);
 
-                return new ResponseEntity<>(createdAggregate.getBody(), HttpStatus.OK);
+                return fixTransferEncodingHeader(new ResponseEntity<>(createdAggregate.getBody(), HttpStatus.OK));
         }
 
+        private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {
+                HttpHeaders httpHeaders = HttpHeaders.writableHttpHeaders(response.getHeaders());
+                httpHeaders.set("Transfer-Encoding", null);
+
+                return new ResponseEntity<>(response.getBody(), httpHeaders, response.getStatusCode());
+        }
 }

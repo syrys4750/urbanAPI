@@ -41,17 +41,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ParkingController {
     @Autowired
     RestTemplate restTemplate;
+
     @Value("${app.repository.parkings.url}")
     String parkingRepositoryUrl;
+
     @Value("${app.repository.events.url}")
     String eventRepositoryUrl;
 
     @PostMapping("/aparcamiento")
     public ResponseEntity<Parking> createParking(@RequestBody @Validated Parking parking) {
         try {
-            return restTemplate.postForEntity(parkingRepositoryUrl + "/aparcamiento", parking, Parking.class);
+            ResponseEntity<Parking> response = restTemplate.postForEntity(parkingRepositoryUrl + "/aparcamiento",
+                    parking, Parking.class);
+            return fixTransferEncodingHeader(response);
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAs(Parking.class));
+            return fixTransferEncodingHeader(
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAs(Parking.class)));
         }
     }
 
@@ -62,7 +67,9 @@ public class ParkingController {
 
     @GetMapping("/aparcamientos")
     public ResponseEntity<Parking[]> findAllParkings() {
-        return restTemplate.getForEntity(parkingRepositoryUrl + "/aparcamientos", Parking[].class);
+        ResponseEntity<Parking[]> response = restTemplate.getForEntity(parkingRepositoryUrl + "/aparcamientos",
+                Parking[].class);
+        return fixTransferEncodingHeader(response);
     }
 
     @PutMapping("aparcamiento/{id}")
@@ -78,10 +85,9 @@ public class ParkingController {
                     entity,
                     Parking.class);
 
-            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+            return fixTransferEncodingHeader(ResponseEntity.status(response.getStatusCode()).body(response.getBody()));
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(null); // o maneja el error de acuerdo a tu lógica de
-                                                                         // negocio
+            return fixTransferEncodingHeader(ResponseEntity.status(ex.getStatusCode()).body(null));
         }
     }
 
@@ -91,11 +97,15 @@ public class ParkingController {
             @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
         String requestUrl = eventRepositoryUrl + "/aparcamiento/" + id + "/status";
 
+        ResponseEntity<?> response;
         if (from != null && to != null) {
             requestUrl = requestUrl + "?from=" + from + "&to=" + to;
-            return restTemplate.getForEntity(requestUrl, StatusDTO[].class);
+            response = restTemplate.getForEntity(requestUrl, StatusDTO[].class);
+        } else {
+            response = restTemplate.getForEntity(requestUrl, StatusDTO.class);
         }
-        return restTemplate.getForEntity(requestUrl, StatusDTO.class);
+
+        return fixTransferEncodingHeader(response);
     }
 
     @GetMapping("/top10")
@@ -110,10 +120,17 @@ public class ParkingController {
                             Parking.class);
             if (parkingResponse.getStatusCode() != HttpStatus.OK
                     && parkingResponse.getStatusCode() != HttpStatus.ACCEPTED)
-                return new ResponseEntity<>(new ArrayList<>(), parkingResponse.getStatusCode());
+                return fixTransferEncodingHeader(
+                        new ResponseEntity<>(new ArrayList<>(), parkingResponse.getStatusCode()));
             top10ParkingsByDisponibility.add(parkingResponse.getBody());
         }
-        return new ResponseEntity<>(top10ParkingsByDisponibility, HttpStatus.OK);
+        return fixTransferEncodingHeader(new ResponseEntity<>(top10ParkingsByDisponibility, HttpStatus.OK));
     }
 
+    private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {
+        HttpHeaders httpHeaders = HttpHeaders.writableHttpHeaders(response.getHeaders());
+        httpHeaders.set("Transfer-Encoding", null);
+
+        return new ResponseEntity<>(response.getBody(), httpHeaders, response.getStatusCode());
+    }
 }

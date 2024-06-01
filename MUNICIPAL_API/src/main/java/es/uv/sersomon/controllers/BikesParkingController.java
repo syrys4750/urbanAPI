@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,8 +33,10 @@ import org.springframework.web.client.RestTemplate;
 public class BikesParkingController {
     @Autowired
     RestTemplate restTemplate;
+
     @Value("${app.service.parking.url}")
     private String parkingServiceUrl;
+
     @Value("${app.service.station.url}")
     private String stationServiceUrl;
 
@@ -44,7 +47,6 @@ public class BikesParkingController {
     }
 
     private double calculateDistance(double startLat, double startLong, double endLat, double endLong) {
-
         double dLat = Math.toRadians((endLat - startLat));
         double dLong = Math.toRadians((endLong - startLong));
 
@@ -99,10 +101,18 @@ public class BikesParkingController {
             @RequestParam(value = "lon", required = false) Double longitude) {
 
         if (latitude == null || longitude == null) {
-            return new ResponseEntity<>("Latitude and longitude params are required.", HttpStatus.BAD_REQUEST);
+            return fixTransferEncodingHeader(
+                    new ResponseEntity<>("Latitude and longitude params are required.", HttpStatus.BAD_REQUEST));
         }
 
-        return new ResponseEntity<>(getNearestAvailableParkingFromApi(latitude, longitude), HttpStatus.OK);
+        return fixTransferEncodingHeader(
+                new ResponseEntity<>(getNearestAvailableParkingFromApi(latitude, longitude), HttpStatus.OK));
     }
 
+    private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {
+        HttpHeaders httpHeaders = HttpHeaders.writableHttpHeaders(response.getHeaders());
+        httpHeaders.set("Transfer-Encoding", null);
+
+        return new ResponseEntity<>(response.getBody(), httpHeaders, response.getStatusCode());
+    }
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -24,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class EventController {
     @Autowired
     RestTemplate restTemplate;
+
     @Value("${app.repository.parkings.url}")
     String parkingRepositoryUrl;
+
     @Value("${app.repository.events.url}")
     String eventRepositoryUrl;
 
@@ -34,9 +37,19 @@ public class EventController {
         try {
             // if parking does not exist, an exception will be thrown
             restTemplate.getForEntity(parkingRepositoryUrl + "/aparcamientos/" + id, Parking.class);
-            return restTemplate.postForEntity(eventRepositoryUrl + "/evento/" + id, event, Event.class);
+            ResponseEntity<Event> response = restTemplate.postForEntity(eventRepositoryUrl + "/evento/" + id, event,
+                    Event.class);
+            return fixTransferEncodingHeader(response);
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
+            return fixTransferEncodingHeader(
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString()));
         }
+    }
+
+    private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {
+        HttpHeaders httpHeaders = HttpHeaders.writableHttpHeaders(response.getHeaders());
+        httpHeaders.set("Transfer-Encoding", null);
+
+        return new ResponseEntity<>(response.getBody(), httpHeaders, response.getStatusCode());
     }
 }

@@ -8,11 +8,10 @@ spec:
   selector:
     app: mongo-aggregate
   ports:
-  - port: 27017
-    targetPort: 27017
+    - port: 27017
+      targetPort: 27017
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,7 +28,14 @@ spec:
         function: persistence
     spec:
       containers:
-      - name: mongo-aggregate
-        image: mongo:4.4.6
-        ports:
-        - containerPort: 27017
+        - name: mongo-aggregate
+          image: mongo:4.4.6
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-aggregate-pvc-local
+      volumes:
+        - name: mongo-aggregate-pvc-local
+          persistentVolumeClaim:
+            claimName: mongo-aggregate-pvc-local
