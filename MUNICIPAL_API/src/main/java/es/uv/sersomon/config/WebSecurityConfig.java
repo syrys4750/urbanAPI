@@ -44,6 +44,9 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/estacion/**").hasAnyAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/v1/aparcamiento").hasAnyAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/aparcamiento/**").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/swagger-ui/*", "/api/v1/api-spec", "/api/v1/api-spec/*",
+                        "/api/v1/api-gui.html", "/api/v1/swagger-ui")
+                .permitAll()
                 .and()
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
 

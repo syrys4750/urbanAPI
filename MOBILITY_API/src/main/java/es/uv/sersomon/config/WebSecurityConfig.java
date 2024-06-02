@@ -35,6 +35,9 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/api/v1/aparcamientos", "/api/v1/aparcamiento/*/status").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/swagger-ui/*", "/api/v1/api-spec", "/api/v1/api-spec/*",
+                        "/api/v1/api-gui.html", "/api/v1/swagger-ui")
+                .permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/aparcamiento").hasAnyAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/aparcamiento/**").hasAnyAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/estacion/**").hasAnyAuthority("ROLE_ADMIN")
