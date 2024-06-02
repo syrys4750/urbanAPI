@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import es.uv.sersomon.models.Station;
+import es.uv.sersomon.models.StationToken;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,12 +35,22 @@ public class StationController {
     @Value("${app.repository.stations.url}")
     String stationRepositoryUrl;
 
+    @Value("${app.repository.auth.url}")
+    String authServiceUrl;
+
+    private static final String ROLE_STATION = "ROLE_STATION";
+
     @PostMapping("/estacion")
     public ResponseEntity<?> createStation(@RequestBody @Validated Station station) {
         try {
             ResponseEntity<Station> response = restTemplate.postForEntity(stationRepositoryUrl + "/estacion", station,
                     Station.class);
-            return fixTransferEncodingHeader(response);
+            ResponseEntity<String> jwtTokenForParking = restTemplate.getForEntity(
+                    authServiceUrl + "/generateJwtToken?id=" + response.getBody().getId() + "&role=" + ROLE_STATION,
+                    String.class);
+            ResponseEntity<StationToken> responseToken = new ResponseEntity<>(
+                    new StationToken(response.getBody(), jwtTokenForParking.getBody()), HttpStatus.OK);
+            return fixTransferEncodingHeader(responseToken);
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             return fixTransferEncodingHeader(
                     ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString()));

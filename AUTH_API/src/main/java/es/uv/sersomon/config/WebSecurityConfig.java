@@ -27,7 +27,8 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/api/v1/jwt/*").permitAll();
+                .requestMatchers(HttpMethod.POST, "/api/v1/jwt/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/generateJwtToken").permitAll();
 
         return http.build();
 

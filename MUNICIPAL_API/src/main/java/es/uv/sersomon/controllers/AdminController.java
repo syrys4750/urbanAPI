@@ -13,7 +13,9 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import es.uv.sersomon.models.Parking;
+import es.uv.sersomon.models.ParkingToken;
 import es.uv.sersomon.models.Station;
+import es.uv.sersomon.models.StationToken;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,21 +35,26 @@ public class AdminController {
     @Value("${app.service.station.url}")
     private String stationServiceUrl;
 
+    @Value("${app.repository.auth.url}")
+    String authServiceUrl;
+
     @Value("${app.jwt.key}")
     private String key;
 
+    private static final String ROLE_PARKING = "ROLE_PARKING";
+
     @PostMapping("/estacion")
-    public ResponseEntity<Station> createStation(@RequestBody @Valid Station station) {
+    public ResponseEntity<StationToken> createStation(@RequestBody @Valid Station station) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + key);
 
         HttpEntity<Station> request = new HttpEntity<>(station, headers);
         try {
-            ResponseEntity<Station> createdStation = restTemplate.exchange(
+            ResponseEntity<StationToken> createdStation = restTemplate.exchange(
                     stationServiceUrl + "/estacion",
                     HttpMethod.POST,
                     request,
-                    Station.class);
+                    StationToken.class);
             return fixTransferEncodingHeader(new ResponseEntity<>(createdStation.getBody(), HttpStatus.OK));
         } catch (HttpStatusCodeException e) {
             return fixTransferEncodingHeader(new ResponseEntity<>(null, e.getStatusCode()));
@@ -55,31 +62,34 @@ public class AdminController {
     }
 
     @DeleteMapping("/estacion/{id}")
-    public void deleteStation(@PathVariable int id) {
+    public ResponseEntity<String> deleteStation(@PathVariable int id) {
         restTemplate.delete(stationServiceUrl + "/estacion/" + id);
+        return new ResponseEntity<>("Station with id " + id + " marked for delete", HttpStatus.OK);
     }
 
     @PostMapping("/aparcamiento")
-    public ResponseEntity<Parking> createParking(@RequestBody @Valid Parking parking) {
+    public ResponseEntity<ParkingToken> createParking(@RequestBody @Valid Parking parking) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + key);
 
         HttpEntity<Parking> request = new HttpEntity<>(parking, headers);
         try {
-            ResponseEntity<Parking> createdParking = restTemplate.exchange(
+            ResponseEntity<ParkingToken> createdParkingToken = restTemplate.exchange(
                     parkingServiceUrl + "/aparcamiento",
                     HttpMethod.POST,
                     request,
-                    Parking.class);
-            return fixTransferEncodingHeader(new ResponseEntity<>(createdParking.getBody(), HttpStatus.OK));
+                    ParkingToken.class);
+
+            return fixTransferEncodingHeader(createdParkingToken);
         } catch (HttpStatusCodeException e) {
             return fixTransferEncodingHeader(new ResponseEntity<>(null, e.getStatusCode()));
         }
     }
 
     @DeleteMapping("/aparcamiento/{id}")
-    public void deleteParking(@PathVariable int id) {
+    public ResponseEntity<String> deleteParking(@PathVariable int id) {
         restTemplate.delete(parkingServiceUrl + "/aparcamiento/" + id);
+        return new ResponseEntity<>("Station with id " + id + " marked for delete", HttpStatus.OK);
     }
 
     private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {

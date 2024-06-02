@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import es.uv.sersomon.models.Event;
 import es.uv.sersomon.models.Parking;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,7 @@ public class EventController {
     String eventRepositoryUrl;
 
     @PostMapping("/evento/{id}")
-    public ResponseEntity<?> createEvent(@RequestBody @Validated Event event, @PathVariable int id) {
+    public ResponseEntity<?> createEvent(@RequestBody @Valid Event event, @PathVariable int id) {
         try {
             // if parking does not exist, an exception will be thrown
             restTemplate.getForEntity(parkingRepositoryUrl + "/aparcamientos/" + id, Parking.class);

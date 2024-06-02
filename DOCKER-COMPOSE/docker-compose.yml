@@ -1,5 +1,3 @@
-# TODO: tengo que persistir la inforamcion o asi
-
 services:
   sql_db_pollution:
     image: mysql:8.0

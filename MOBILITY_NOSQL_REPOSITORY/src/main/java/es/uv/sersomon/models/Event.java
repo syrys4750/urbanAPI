@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +17,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-// TODO: me hace falta un @id? si me da igual que esten repetidos
 public class Event {
     @Id
     private String id;
+    @NotNull
     private int idParking;
+    @NotBlank
     private String operation;
+    @NotNull
     private Integer bikesAvailable;
+    @NotNull
     private Integer freeParkingSpots;
+    @NotNull
     private LocalDateTime timestamp;
 }

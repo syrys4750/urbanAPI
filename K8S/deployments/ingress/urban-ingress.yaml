@@ -10,7 +10,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    # TODO: add vm ip
     - http:
         paths:
           - pathType: Prefix # mobility API

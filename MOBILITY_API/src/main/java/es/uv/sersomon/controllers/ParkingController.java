@@ -25,7 +25,10 @@ import org.springframework.web.client.RestTemplate;
 import es.uv.sersomon.DTOs.StatusDTO;
 import es.uv.sersomon.models.Event;
 import es.uv.sersomon.models.Parking;
+import es.uv.sersomon.models.ParkingToken;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
+import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Controller
 @RequestMapping("/api/v1")
 public class ParkingController {
+
     @Autowired
     RestTemplate restTemplate;
 
@@ -48,21 +52,32 @@ public class ParkingController {
     @Value("${app.repository.events.url}")
     String eventRepositoryUrl;
 
+    @Value("${app.repository.auth.url}")
+    String authServiceUrl;
+
+    private static final String ROLE_PARKING = "ROLE_PARKING";
+
     @PostMapping("/aparcamiento")
-    public ResponseEntity<Parking> createParking(@RequestBody @Validated Parking parking) {
+    public ResponseEntity<ParkingToken> createParking(@RequestBody @Valid Parking parking) {
         try {
             ResponseEntity<Parking> response = restTemplate.postForEntity(parkingRepositoryUrl + "/aparcamiento",
                     parking, Parking.class);
-            return fixTransferEncodingHeader(response);
+            ResponseEntity<String> jwtTokenForParking = restTemplate.getForEntity(
+                    authServiceUrl + "/generateJwtToken?id=" + response.getBody().getId() + "&role=" + ROLE_PARKING,
+                    String.class);
+            ResponseEntity<ParkingToken> responseToken = new ResponseEntity<ParkingToken>(
+                    new ParkingToken(response.getBody(), jwtTokenForParking.getBody()), HttpStatus.OK);
+            return fixTransferEncodingHeader(responseToken);
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             return fixTransferEncodingHeader(
-                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAs(Parking.class)));
+                    ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAs(ParkingToken.class)));
         }
     }
 
     @DeleteMapping("/aparcamiento/{id}")
-    public void deleteParking(@PathVariable int id) {
+    public ResponseEntity<String> deleteParking(@PathVariable int id) {
         restTemplate.delete(parkingRepositoryUrl + "/aparcamiento/" + id);
+        return new ResponseEntity<>("Parking with id " + id + " marked for delete", HttpStatus.OK);
     }
 
     @GetMapping("/aparcamientos")
@@ -73,7 +88,7 @@ public class ParkingController {
     }
 
     @PutMapping("aparcamiento/{id}")
-    public ResponseEntity<Parking> updateParking(@PathVariable String id, @RequestBody Parking parking) {
+    public ResponseEntity<Parking> updateParking(@PathVariable String id, @RequestBody @Valid Parking parking) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

@@ -20,6 +20,8 @@ import org.yaml.snakeyaml.events.Event;
 
 import es.uv.sersomon.models.Parking;
 import es.uv.sersomon.services.ParkingService;
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,9 +33,8 @@ public class ParkingController {
     @Autowired
     ParkingService parkingService;
 
-    // TODO: devolver error si todos los campos son vacios?
     @PostMapping("/aparcamiento")
-    public ResponseEntity<Parking> createParking(@RequestBody Parking parkingRequest) {
+    public ResponseEntity<Parking> createParking(@RequestBody @Valid Parking parkingRequest) {
         LOGGER.debug("Create Parking with ID " + parkingRequest.getId());
         if (parkingService.isParkingAlreadyPresent(parkingRequest)) {
             return new ResponseEntity<Parking>(new Parking(), HttpStatus.CONFLICT);
@@ -44,13 +45,14 @@ public class ParkingController {
     }
 
     @DeleteMapping("/aparcamiento/{id}")
-    public void deleteParkingById(@PathVariable("id") int id) {
+    public ResponseEntity<String> deleteParkingById(@PathVariable("id") int id) {
         LOGGER.debug("Delete Parking with ID " + id);
         parkingService.deleteParking(id);
+        return new ResponseEntity<>("Station with id " + id + " marked for delete", HttpStatus.OK);
     }
 
     @PutMapping("aparcamiento/{id}")
-    public ResponseEntity<Parking> updateParkingById(@PathVariable int id, @RequestBody Parking parking) {
+    public ResponseEntity<Parking> updateParkingById(@PathVariable int id, @RequestBody @Valid Parking parking) {
         Parking savedParking = parkingService.updateParking(id, parking);
         if (savedParking.getId() == null) {
             return new ResponseEntity<Parking>(new Parking(), HttpStatus.NOT_FOUND);

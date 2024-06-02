@@ -5,13 +5,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.uv.sersomon.models.Measurement;
 import es.uv.sersomon.services.MeasurementService;
-import jakarta.websocket.server.PathParam;
+import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -30,7 +28,7 @@ public class MeasurementController {
     private MeasurementService measurementService;
 
     @PostMapping("/estacion/{id}")
-    public ResponseEntity<?> createMeasurement(@RequestBody @Validated Measurement measurement, @PathVariable int id) {
+    public ResponseEntity<?> createMeasurement(@RequestBody @Valid Measurement measurement, @PathVariable int id) {
         if (measurement.getIdStation() == null) {
             measurement.setIdStation(Integer.valueOf(id));
         }

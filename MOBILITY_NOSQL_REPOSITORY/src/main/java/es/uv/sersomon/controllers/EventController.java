@@ -1,30 +1,20 @@
 package es.uv.sersomon.controllers;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.uv.sersomon.models.Event;
 import es.uv.sersomon.services.EventService;
-import jakarta.websocket.server.PathParam;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,7 +62,7 @@ public class EventController {
     }
 
     @PostMapping("/evento/{id}")
-    public ResponseEntity<?> createEvent(@RequestBody Event event, @PathVariable int id) {
+    public ResponseEntity<?> createEvent(@RequestBody @Valid Event event, @PathVariable int id) {
         if (!eventService.existsByIdParking(id)) {
             return new ResponseEntity<>("Parking with id " + id + " not found", HttpStatus.NOT_FOUND);
         }

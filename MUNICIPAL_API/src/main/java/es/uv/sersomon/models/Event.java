@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-// TODO: me hace falta un @id? si me da igual que esten repetidos
 public class Event {
     private int idParking;
     private Integer bikesAvailable;

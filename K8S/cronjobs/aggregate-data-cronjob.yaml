@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: aggregate-data-cronjob
+  namespace: urban
+spec:
+  schedule: "*/15 * * * *" # Every 15 minutes
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: aggregate-data-curl
+              image: alpine/httpie:3.2.2
+              command:
+                - /bin/sh
+                - -c
+                - http GET municipal-api:8080/api/v1/aggregateData -A bearer -a eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlJPTEVfU0VSVklDRSIsImlzcyI6InNlcnNvbW9uIiwiZXhwIjoxNzE3NjkyMTg5fQ.gzXWudexHvRbrTNkjp_gGBh7_e9KLCAlWmLpSG5WsoA
+          restartPolicy: OnFailure

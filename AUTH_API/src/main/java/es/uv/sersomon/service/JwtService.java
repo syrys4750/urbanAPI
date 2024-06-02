@@ -19,7 +19,7 @@ public class JwtService {
     @Value("${sys.token.issuer}")
     private String issuer;
     @Value("${sys.token.duration}")
-    private Integer duration;
+    private Long duration;
 
     private Algorithm algorithm;
     private JWTVerifier verifier;
