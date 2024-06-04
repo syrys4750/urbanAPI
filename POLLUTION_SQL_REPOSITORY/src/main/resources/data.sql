@@ -9,3 +9,4 @@ INSERT IGNORE INTO stations (id, direction, longitude, latitude) VALUES
 (8, 'Spruce Way', 12.4, 39.5300),
 (9, 'Willow Drive', 10.2, 39.5400),
 (10, 'Ash Court', 19.2, 39.5500);
+

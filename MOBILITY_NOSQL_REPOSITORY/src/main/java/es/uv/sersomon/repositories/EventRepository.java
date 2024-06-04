@@ -12,8 +12,8 @@ import es.uv.sersomon.models.Event;
 public interface EventRepository extends MongoRepository<Event, String> {
         List<Event> findById(int id);
 
-        List<Event> findByIdParkingAndTimestampBetweenOrderByTimestampDesc(int idParking, LocalDateTime from,
-                        LocalDateTime to);
+        List<Event> findByIdParkingAndTimestampBetweenOrderByTimestampDesc(int idParking,
+                        LocalDateTime from, LocalDateTime to);
 
         List<Event> findByIdParking(int id);
 
@@ -22,8 +22,9 @@ public interface EventRepository extends MongoRepository<Event, String> {
         Event findFirstByIdParkingOrderByTimestampDesc(int idParking);
 
         @Aggregation(pipeline = {
-                        "{ '$group': { '_id': '$idParking', 'bikesAvailable': { '$max': '$bikesAvailable' } } }",
-                        "{ '$sort': { 'bikesAvailable': -1 } }",
+                        "{ '$sort': { 'timestamp': -1 } }",
+                        "{ '$group': { '_id': '$idParking', 'latestEvent': { '$first': '$$ROOT' } } }",
+                        "{ '$sort': { 'latestEvent.bikesAvailable': -1 } }",
                         "{ '$limit': 10 }",
                         "{ '$project': { '_id': 0, 'idParking': '$_id' } }"
         })

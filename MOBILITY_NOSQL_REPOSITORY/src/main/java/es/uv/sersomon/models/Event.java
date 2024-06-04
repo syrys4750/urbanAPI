@@ -21,7 +21,7 @@ public class Event {
     @Id
     private String id;
     @NotNull
-    private int idParking;
+    private Integer idParking;
     @NotBlank
     private String operation;
     @NotNull

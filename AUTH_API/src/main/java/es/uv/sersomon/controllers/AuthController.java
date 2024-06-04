@@ -24,7 +24,14 @@ import es.uv.sersomon.service.JwtService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.auth0.jwt.algorithms.Algorithm;
+
+import es.uv.sersomon.models.TokenInfo;
+import es.uv.sersomon.service.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Controller
 @RequestMapping("/api/v1/jwt")
@@ -34,6 +41,14 @@ public class AuthController {
     private JwtService jwtService;
 
     @PostMapping("/auth")
+    @Operation(summary = "Check JWT Token", description = "Validates the JWT token provided in the Authorization header")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token validated successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TokenInfo.class)) }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden, token is invalid or expired", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Unprocessable entity, Authorization header is missing or malformed", content = @Content)
+    })
     public ResponseEntity<?> checkJwtToken(@RequestBody String authHeader) {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -41,10 +56,6 @@ public class AuthController {
                 String token = jwtService.getTokenFromHeader(authHeader);
                 int id = jwtService.getIdFromToken(token);
                 String role = jwtService.getRoleFromToken(token);
-                // a Collection is created to comply with `UsernamePasswordAuthenticationToken
-                // constructor, even though
-                // the requirements specify that every user has one or none role (authority)
-
                 return new ResponseEntity<>(new TokenInfo(id, role), HttpStatus.OK);
             } catch (Exception exception) {
                 return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);

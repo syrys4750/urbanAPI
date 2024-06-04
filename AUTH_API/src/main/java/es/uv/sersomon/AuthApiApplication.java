@@ -24,10 +24,10 @@ public class AuthApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("ADMIN JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_ADMIN"));
-		System.out.println("STATION JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_STATION"));
-		System.out.println("PARKING JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_PARKING"));
-		System.out.println("SERVICE JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_SERVICE"));
+		System.out.println("ADMIN JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_ADMIN") + "\n");
+		System.out.println("STATION JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_STATION") + "\n");
+		System.out.println("PARKING JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_PARKING") + "\n");
+		System.out.println("SERVICE JWT TOKEN: " + jwtService.generateAccessToken(1, "ROLE_SERVICE") + "\n");
 	}
 
 }

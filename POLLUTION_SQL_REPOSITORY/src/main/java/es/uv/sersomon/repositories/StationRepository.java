@@ -10,5 +10,5 @@ import org.springframework.stereotype.Service;
 import es.uv.sersomon.models.Station;
 
 public interface StationRepository extends JpaRepository<Station, Integer> {
-
+    boolean existsByDirectionAndLatitudeAndLongitude(String direction, Double latitude, Double longitude);
 }

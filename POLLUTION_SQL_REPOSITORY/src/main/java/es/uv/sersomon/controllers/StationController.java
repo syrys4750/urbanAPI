@@ -24,6 +24,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Controller
 @RequestMapping("/api/v1")
 public class StationController {
@@ -31,11 +37,22 @@ public class StationController {
     StationService stationService;
 
     @GetMapping("/estaciones")
+    @Operation(summary = "Find All Stations", description = "Retrieves all stations")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Stations retrieved successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Station.class)) })
+    })
     public ResponseEntity<List<Station>> findStations() {
         return new ResponseEntity<>(stationService.findAllStations(), HttpStatus.OK);
     }
 
     @GetMapping("/estaciones/{id}")
+    @Operation(summary = "Find Station by ID", description = "Retrieves a station by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Station retrieved successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Station.class)) }),
+            @ApiResponse(responseCode = "404", description = "Station not found", content = @Content)
+    })
     public ResponseEntity<Station> findStationById(@PathVariable int id) {
         Optional<Station> station = stationService.findStationById(id);
         if (station.isEmpty()) {
@@ -45,15 +62,37 @@ public class StationController {
     }
 
     @PostMapping("/estacion")
+    @Operation(summary = "Create Station", description = "Creates a new station")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Station created successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Station.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN)", content = @Content)
+    })
     public ResponseEntity<Station> createStation(@RequestBody @Valid Station station) {
-
+        if (stationService.stationExistsByLocation(station)) {
+            new ResponseEntity<>(new Station(), HttpStatus.CONFLICT);
+        }
+        station.setId(null);
         Station createdStation = stationService.createStation(station);
         return new ResponseEntity<>(createdStation, HttpStatus.OK);
     }
 
     @PutMapping("/estacion/{id}")
+    @Operation(summary = "Update Station", description = "Updates a station by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Station updated successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Station.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Station not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN)", content = @Content)
+    })
     public ResponseEntity<Station> updateStation(@PathVariable int id, @RequestBody @Valid Station station) {
-        if (station.getId() == null) {
+        if (station.getId() == null)
+            station.setId(id);
+        if (station.getId().intValue() != id) {
             station.setId(id);
         }
         if (!stationService.existsStation(station.getId()))
@@ -64,6 +103,13 @@ public class StationController {
     }
 
     @DeleteMapping("/estacion/{id}")
+    @Operation(summary = "Delete Station", description = "Deletes a station by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Station deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Station not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN)", content = @Content)
+    })
     public ResponseEntity<String> deleteStation(@PathVariable Integer id) {
         if (!stationService.existsStation(id))
             throw new NotFoundStationException("Station not found");

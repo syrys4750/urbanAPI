@@ -28,6 +28,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import es.uv.sersomon.models.Event;
+import es.uv.sersomon.models.Parking;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+
 @Controller
 @RequestMapping("/api/v1")
 public class BikesParkingController {
@@ -96,6 +103,11 @@ public class BikesParkingController {
     }
 
     @GetMapping("/aparcamientoCercano")
+    @Operation(summary = "Get Nearest Available Parking", description = "Finds the nearest parking with available bikes based on the provided latitude and longitude.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Nearest available parking retrieved successfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, latitude and longitude parameters are required", content = @Content)
+    })
     public ResponseEntity<?> getNearestAvailableParking(
             @RequestParam(value = "lat", required = false) Double latitude,
             @RequestParam(value = "lon", required = false) Double longitude) {

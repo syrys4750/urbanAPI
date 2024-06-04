@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: persistence-url-configmap
+  namespace: urban
 data:
   mongo-aggregate: mongodb://mongo-aggregate:27017/aggregate
   mongo-pollution: mongodb://mongo-pollution:27017/measurements

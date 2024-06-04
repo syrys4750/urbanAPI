@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import es.uv.sersomon.models.Station;
 import es.uv.sersomon.repositories.StationRepository;
+import jakarta.validation.Valid;
 
 @Service
 public class StationService {
@@ -37,6 +38,11 @@ public class StationService {
 
     public boolean existsStation(Integer id) {
         return stationRepository.existsById(id);
+    }
+
+    public boolean stationExistsByLocation(@Valid Station station) {
+        return stationRepository.existsByDirectionAndLatitudeAndLongitude(station.getDirection(), station.getLatitude(),
+                station.getLongitude());
     }
 
 }

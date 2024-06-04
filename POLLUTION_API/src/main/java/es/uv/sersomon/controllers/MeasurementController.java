@@ -21,7 +21,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -36,9 +42,18 @@ public class MeasurementController {
     String measurementRepositoryUrl;
 
     @PostMapping("/estacion/{id}")
-    public ResponseEntity<?> createMeasurement(@RequestBody Measurement measurement, @PathVariable int id) {
+    @Operation(summary = "Create Measurement", description = "Creates a new measurement for a specified station")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Measurement created successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Measurement.class)) }),
+            @ApiResponse(responseCode = "404", description = "Station not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN or ROLE_STATION)", content = @Content)
+    })
+    public ResponseEntity<?> createMeasurement(@RequestBody @Valid Measurement measurement, @PathVariable int id) {
         try {
-            // In case the station does not exists, an exception is thrown
+            // In case the station does not exist, an exception is thrown
             restTemplate.getForEntity(stationsRepositoryUrl + "/estaciones/" + id, Station.class);
             ResponseEntity<Measurement> response = restTemplate
                     .postForEntity(measurementRepositoryUrl + "/estacion/" + id, measurement, Measurement.class);
@@ -50,6 +65,13 @@ public class MeasurementController {
     }
 
     @GetMapping("/estacion/{id}/status")
+    @Operation(summary = "Get Station Status", description = "Retrieves the status of a station's measurements within an optional date range")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status retrieved successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Measurement[].class)) }),
+            @ApiResponse(responseCode = "404", description = "Station not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content)
+    })
     public ResponseEntity<?> getStatus(@PathVariable int id,
             @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {

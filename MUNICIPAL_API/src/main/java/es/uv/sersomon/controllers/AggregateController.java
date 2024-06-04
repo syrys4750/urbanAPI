@@ -26,6 +26,11 @@ import es.uv.sersomon.models.Measurement;
 import es.uv.sersomon.models.Parking;
 import es.uv.sersomon.models.ParkingBikesPollution;
 import es.uv.sersomon.models.Station;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Controller
 @RequestMapping("/api/v1")
@@ -84,6 +89,15 @@ public class AggregateController {
         }
 
         @GetMapping("/aggregateData")
+        @Operation(summary = "Get Aggregate Data", description = "Retrieves aggregate data of parkings and pollution levels")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Aggregate data retrieved successfully", content = {
+                                        @Content(mediaType = "application/json", schema = @Schema(implementation = Aggregate.class)) }),
+                        @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content),
+                        @ApiResponse(responseCode = "404", description = "Data not found", content = @Content),
+                        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                        @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN or ROLE_SERVICE)", content = @Content)
+        })
         public ResponseEntity<Aggregate> getAggregateData() {
                 ResponseEntity<Parking[]> allParkingsPrimitive = restTemplate.getForEntity(
                                 parkingServiceUrl + "/aparcamientos",
@@ -101,6 +115,7 @@ public class AggregateController {
                         ResponseEntity<Event[]> currentParkingEventsPrimitive = restTemplate.getForEntity(urlParking,
                                         Event[].class);
                         List<Event> currentParkingEvents = Arrays.asList(currentParkingEventsPrimitive.getBody());
+                        // In case no events are found, it is assumed there are no bikes available
                         Double currentParkingAverageBikesAvailable = currentParkingEvents.stream()
                                         .mapToDouble(Event::getBikesAvailable).average().orElse(0);
 
@@ -143,6 +158,12 @@ public class AggregateController {
         }
 
         @GetMapping("/aggregatedData")
+        @Operation(summary = "Get Latest Aggregated Data", description = "Retrieves the most recent aggregated data")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Latest aggregated data retrieved successfully", content = {
+                                        @Content(mediaType = "application/json", schema = @Schema(implementation = Aggregate.class)) }),
+                        @ApiResponse(responseCode = "404", description = "Aggregated data not found", content = @Content)
+        })
         public ResponseEntity<Aggregate> getLatestAggregate() {
                 ResponseEntity<Aggregate> createdAggregate = restTemplate
                                 .getForEntity(aggregateServiceUrl + "/aggregatedData", Aggregate.class);

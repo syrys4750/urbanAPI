@@ -16,6 +16,11 @@ import es.uv.sersomon.models.Parking;
 import es.uv.sersomon.models.ParkingToken;
 import es.uv.sersomon.models.Station;
 import es.uv.sersomon.models.StationToken;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,9 +46,16 @@ public class AdminController {
     @Value("${app.jwt.key}")
     private String key;
 
-    private static final String ROLE_PARKING = "ROLE_PARKING";
-
     @PostMapping("/estacion")
+    @Operation(summary = "Create Station", description = "Creates a new station")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Station created successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = StationToken.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Conflict, station already exists", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN or ROLE_SERVICE)", content = @Content)
+    })
     public ResponseEntity<StationToken> createStation(@RequestBody @Valid Station station) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + key);
@@ -62,12 +74,31 @@ public class AdminController {
     }
 
     @DeleteMapping("/estacion/{id}")
+    @Operation(summary = "Delete Station", description = "Deletes a station by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Station deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Station not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN or ROLE_SERVICE)", content = @Content)
+    })
     public ResponseEntity<String> deleteStation(@PathVariable int id) {
-        restTemplate.delete(stationServiceUrl + "/estacion/" + id);
-        return new ResponseEntity<>("Station with id " + id + " marked for delete", HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + key);
+        HttpEntity<?> request = new HttpEntity<Object>(headers);
+        restTemplate.exchange(stationServiceUrl + "/estacion/" + id, HttpMethod.DELETE, request, String.class);
+        return new ResponseEntity<>("Station with id " + id + " marked for deletion", HttpStatus.OK);
     }
 
     @PostMapping("/aparcamiento")
+    @Operation(summary = "Create Parking", description = "Creates a new parking")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Parking created successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParkingToken.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Conflict, parking already exists", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN or ROLE_SERVICE)", content = @Content)
+    })
     public ResponseEntity<ParkingToken> createParking(@RequestBody @Valid Parking parking) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + key);
@@ -87,9 +118,19 @@ public class AdminController {
     }
 
     @DeleteMapping("/aparcamiento/{id}")
+    @Operation(summary = "Delete Parking", description = "Deletes a parking by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Parking deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Parking not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (No ROLE_ADMIN or ROLE_SERVICE)", content = @Content)
+    })
     public ResponseEntity<String> deleteParking(@PathVariable int id) {
-        restTemplate.delete(parkingServiceUrl + "/aparcamiento/" + id);
-        return new ResponseEntity<>("Station with id " + id + " marked for delete", HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + key);
+        HttpEntity<?> request = new HttpEntity<Object>(headers);
+        restTemplate.exchange(parkingServiceUrl + "/aparcamiento/" + id, HttpMethod.DELETE, request, String.class);
+        return new ResponseEntity<>("Parking with id " + id + " marked for deletion", HttpStatus.OK);
     }
 
     private <T> ResponseEntity<T> fixTransferEncodingHeader(ResponseEntity<T> response) {

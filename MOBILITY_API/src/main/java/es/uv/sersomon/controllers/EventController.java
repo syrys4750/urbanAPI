@@ -15,6 +15,10 @@ import org.springframework.web.client.RestTemplate;
 import es.uv.sersomon.models.Event;
 import es.uv.sersomon.models.Parking;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +39,15 @@ public class EventController {
     String eventRepositoryUrl;
 
     @PostMapping("/evento/{id}")
-    @Operation(summary = "Add an event", description = "Aggregated will be provided by the MUNICIPAL_API")
+    @Operation(summary = "Add an event", description = "Adds an event associated with a parking ID provided by the MUNICIPAL_API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Event created successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Event.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad request, one or more fields are null or invalid", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Parking not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden (no ROLE_ADMIN or ROLE_STATION)", content = @Content)
+    })
     public ResponseEntity<?> createEvent(@RequestBody @Valid Event event, @PathVariable int id) {
         try {
             // if parking does not exist, an exception will be thrown
