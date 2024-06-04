@@ -16,5 +16,11 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - http GET municipal-api:8080/api/v1/aggregateData -A bearer -a eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlJPTEVfU0VSVklDRSIsImlzcyI6InNlcnNvbW9uIiwiZXhwIjoxNzE3NjkyMTg5fQ.gzXWudexHvRbrTNkjp_gGBh7_e9KLCAlWmLpSG5WsoA
+                - http GET municipal-api:8080/api/v1/aggregateData -A bearer -a $SERVICE_PASSWORD
+              env:
+                - name: SERVICE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: cronjob-api-secret
+                      key: token
           restartPolicy: OnFailure
