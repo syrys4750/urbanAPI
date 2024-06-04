@@ -13,21 +13,21 @@ spec:
   rules:
     - http:
         paths:
-          - pathType: Prefix # mobility API
+          - pathType: ImplementationSpecific # mobility API
             path: /mobility/api/v1/(.*)
             backend:
               service:
                 name: mobility-api
                 port:
                   number: 8080
-          - pathType: Prefix # pollution API
+          - pathType: ImplementationSpecific # pollution API
             path: /pollution/api/v1/(.*)
             backend:
               service:
                 name: pollution-api
                 port:
                   number: 8080
-          - pathType: Prefix # municipal API
+          - pathType: ImplementationSpecific # municipal API
             path: /municipal/api/v1/(.*)
             backend:
               service:

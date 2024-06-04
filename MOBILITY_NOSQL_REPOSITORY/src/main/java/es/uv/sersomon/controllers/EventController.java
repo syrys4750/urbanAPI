@@ -52,6 +52,9 @@ public class EventController {
 
                 if (from == null || to == null) {
                         Event mostRecentEvent = eventService.findEventByIdParkingRecent(id);
+                        if (mostRecentEvent == null) {
+                                return new ResponseEntity<StatusDTO>(new StatusDTO(), HttpStatus.NOT_FOUND);
+                        }
                         return new ResponseEntity<StatusDTO>(new StatusDTO(mostRecentEvent.getIdParking(),
                                         mostRecentEvent.getBikesAvailable(), mostRecentEvent.getFreeParkingSpots(),
                                         mostRecentEvent.getTimestamp()), HttpStatus.OK);

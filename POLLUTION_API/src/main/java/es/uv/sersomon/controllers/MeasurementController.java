@@ -77,10 +77,14 @@ public class MeasurementController {
             @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
         try {
             String url = measurementRepositoryUrl + "/estacion/" + id + "/status";
+            ResponseEntity<?> response;
             if (from != null && to != null) {
                 url += "?from=" + from + "&to=" + to;
             }
-            ResponseEntity<Measurement[]> response = restTemplate.getForEntity(url, Measurement[].class);
+            response = restTemplate.getForEntity(url, Measurement[].class);
+            if (from != null && to != null && from.isAfter(to)) {
+                response = ResponseEntity.badRequest().body("Bad request: from date is after to date");
+            }
             return fixTransferEncodingHeader(ResponseEntity.status(response.getStatusCode()).body(response.getBody()));
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             return fixTransferEncodingHeader(

@@ -150,7 +150,8 @@ public class ParkingController {
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Status retrieved successfully", content = {
                                         @Content(mediaType = "application/json", schema = @Schema(implementation = StatusDTO[].class)) }),
-                        @ApiResponse(responseCode = "404", description = "Parking or status not found", content = @Content)
+                        @ApiResponse(responseCode = "404", description = "Parking or status not found", content = @Content),
+                        @ApiResponse(responseCode = "400", description = "from date is after to date", content = @Content)
         })
         public ResponseEntity<?> findParkingStatus(@PathVariable int id,
                         @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
@@ -158,11 +159,20 @@ public class ParkingController {
                 String requestUrl = eventRepositoryUrl + "/aparcamiento/" + id + "/status";
 
                 ResponseEntity<?> response;
-                if (from != null && to != null) {
-                        requestUrl = requestUrl + "?from=" + from + "&to=" + to;
-                        response = restTemplate.getForEntity(requestUrl, StatusDTO[].class);
-                } else {
-                        response = restTemplate.getForEntity(requestUrl, StatusDTO.class);
+                try {
+                        if (from != null && to != null) {
+                                requestUrl = requestUrl + "?from=" + from + "&to=" + to;
+                                response = restTemplate.getForEntity(requestUrl, StatusDTO[].class);
+                        } else {
+                                response = restTemplate.getForEntity(requestUrl, StatusDTO.class);
+                        }
+
+                        if (from != null && to != null && from.isAfter(to)) {
+                                response = ResponseEntity.badRequest().body("Bad request: from date is after to date");
+                        }
+                } catch (HttpClientErrorException.NotFound e) {
+                        // Manejo de la excepción 404
+                        response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking not found");
                 }
 
                 return fixTransferEncodingHeader(response);

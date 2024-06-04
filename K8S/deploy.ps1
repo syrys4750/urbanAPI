@@ -36,6 +36,8 @@ sleep 20
 # Ingress config
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
 kubectl -n ingress-nginx annotate ingressclasses nginx ingressclass.kubernetes.io/is-default-class="true"
+sleep 100
+kubectl apply -f ./deployments/ingress/urban-ingress.yaml
 
 # Cronjobs
 kubectl apply -f ./cronjobs
