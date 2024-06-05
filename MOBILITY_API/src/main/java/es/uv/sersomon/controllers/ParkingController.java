@@ -190,10 +190,16 @@ public class ParkingController {
                 List<Parking> top10ParkingsByDisponibility = new ArrayList<>();
                 for (Object parkingId : top10ParkingsIdByDisponibility.getBody()) {
                         Integer parkingIdInteger = Integer.valueOf(parkingId.toString());
-                        ResponseEntity<Parking> parkingResponse = restTemplate
-                                        .getForEntity(parkingRepositoryUrl + "/aparcamientos/"
-                                                        + parkingIdInteger.intValue(),
-                                                        Parking.class);
+                        ResponseEntity<Parking> parkingResponse;
+                        try {
+                                parkingResponse = restTemplate.getForEntity(parkingRepositoryUrl + "/aparcamientos/"
+                                                + parkingIdInteger.intValue(),
+                                                Parking.class);
+                        } catch (HttpClientErrorException.NotFound ex) {
+                                // Si se produce un 404 para un aparcamiento específico, simplemente sigue con
+                                // el siguiente. Ya que puede haber registros en mongo de parkings eliminados.
+                                continue;
+                        }
                         if (parkingResponse.getStatusCode() != HttpStatus.OK
                                         && parkingResponse.getStatusCode() != HttpStatus.ACCEPTED)
                                 return fixTransferEncodingHeader(
